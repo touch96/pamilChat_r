@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/jquery.httpclient.js")" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $("#onSend").click(function () {
+        	/* var client = new HttpClient();
+        	
+        	client.postAsJsonAsync(
+        			'http://localhost:9000/signIn', 
+        			'm_id='+$("#m_id").val()+','+
+        			'id='+$("#id").val()+','+
+        			'pw='+$("#pw").val()
+        			, 
+        			'application/json', function (response) {
+       		},
+       		function (err) {
+       		}); */
+       		$.ajax({
+       		    type: "POST",
+       		    url: "/signIn",
+       		    data: { m_id: $("#m_id").val(), id: $("#id").val(), pw: $("#pw").val() },
+       		 	success: function(data) {
+                	 alert("ok : " + data.code + ", " + data.params);
+             	},
+    			error: function(data) {
+                	alert("ng");
+           		},
+    			complete : function(data) {
+           		}
+       		});
+
+       });
+    })
+</script>
+</head>
+<body>
+m_id : <input type="text" id="m_id" value="111222333"/><br/>
+id : <input type="text" id="id" value="testUser1"/><br/>
+pw : <input type="password" id="pw" value="aaaa"/><br/>
+<input type="text" id="osKbn" name="osKbn" value="ios7"/>
+<button id="onSend">click send message!!!!!</button>
+<div id="onReceive">dummy</div>
+</body>
+</html>

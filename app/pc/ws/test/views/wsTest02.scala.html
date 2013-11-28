@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/base64.js")" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+    var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket;
+    var socket = new WS("ws://localhost:9000/upload");
+    
+    socket.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+        $("#onReceive").text(data.text)
+    }
+    
+    $("#fileInput").change(function(event){
+        var file = event.target.files[0];
+        var fileReader = new FileReader();
+        var data = {};
+
+        fileReader.readAsDataURL(file);
+        fileReader.onload = function(event) {
+            data.file = event.target.result;
+            socket.send(JSON.stringify({data: data}));
+           /* socket.send(data); */
+        }
+     });
+});
+
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+<input type="file" id="fileInput"></input>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+#################### test
+GET     /                           controllers.Application.index()
+
+GET     /echowebsocketindex         ws.controllers.TestWs001.echowebsocketindex()
+GET     /echowebsocketmessage       ws.controllers.TestWs001.echowebsocketmessage()
+
+GET		/uploadIndex				ws.controllers.TestWs002._index()
+GET     /upload       				ws.controllers.TestWs002.upload()
+
+
+
+
+#################### sign in
+GET     /signInIndex                pc.wsapi.controllers.SignInCtr._index()
+POST    /signIn                     pc.wsapi.controllers.SignInCtr.signIn()
+
+#################### login
+GET     /loginIndex                pc.wsapi.controllers.LoginCtr._index()
+GET     /autholization              pc.wsapi.controllers.LoginCtr.autholization()
+
+
+
+#################### push
+GET    /pushSet                pc.wsapi.controllers.MsgPushCtr.pushSet()
+GET    /pushIndex                pc.wsapi.controllers.MsgPushCtr._index()
+GET    /pushMsg                  pc.wsapi.controllers.MsgPushCtr.pushMsg()
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
