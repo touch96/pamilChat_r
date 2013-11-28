@@ -1,5 +1,7 @@
 package pc.wsapi.controllers;
 
+import java.util.Map;
+
 import org.codehaus.jackson.JsonNode;
 
 import pc.common.controllers.AbstractController;
@@ -30,17 +32,11 @@ public class MsgPushCtr extends AbstractController {
 		
 	}
 	
-	public static WebSocket<JsonNode> pushMsg () {
-		return new WebSocket<JsonNode> () {
-
-			@Override
-			public void onReady(play.mvc.WebSocket.In<JsonNode> in,
-					play.mvc.WebSocket.Out<JsonNode> out) {
-				
-				MsgPushBiz biz = new MsgPushBiz();
-				biz.execute(in, out);
-			}
-		};
+	
+	public static Result pushMsg () {
+		MsgPushBiz biz = new MsgPushBiz();
+		Map<String, String[]> form = request().body().asFormUrlEncoded();
+		return ok(biz.execute(form));
 	}
 
 
