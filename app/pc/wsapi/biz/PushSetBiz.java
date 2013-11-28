@@ -11,7 +11,6 @@ import javapns.notification.ResponsePacket;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import pc.wsapi.biz.MsgPushBiz.BizCallback;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.utils.JsonUtil;
 import play.Logger;
