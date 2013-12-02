@@ -37,6 +37,7 @@ public class MsgPushBiz extends AbstractBiz {
 
 	@Override
 	public JsonNode execute(Map<String, String[]> form) {
+		Logger.debug ("MsgPushBiz - execute");
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
 		
