@@ -42,17 +42,18 @@ public class MsgPushBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		
 		String msg = form.get("msg")[0];
-		String m_id = form.get("m_id")[0];
+		String m_id = form.get("device")[0];
 		String id = form.get("id")[0];
 		
 		try {
-			
+			Logger.info ("id : " + id);
+			Logger.info ("m_id : " + m_id);
 			//user存在チェック
 			Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
 			Query<Users> query = finder.where("id='"+id+"' and m_id='"+m_id+"'");
 			Users users = query.findUnique();
 			
-			if (users != null && users.id.equals(id)) {
+//			if (users != null && users.id.equals(id)) {
 				PushNotificationManager pushManager = new PushNotificationManager();
 				PushNotificationPayload payload = PushNotificationPayload.complex();
 		        payload.addAlert(msg);
@@ -113,7 +114,7 @@ public class MsgPushBiz extends AbstractBiz {
 //						result = JsonUtil.setRtn(ng, params);
 //		            }
 //		        }
-			}
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
