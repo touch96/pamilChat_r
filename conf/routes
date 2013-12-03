@@ -27,7 +27,7 @@ GET     /autholization              pc.wsapi.controllers.LoginCtr.autholization(
 #################### push
 GET    /pushSet                pc.wsapi.controllers.MsgPushCtr.pushSet()
 GET    /pushIndex                pc.wsapi.controllers.MsgPushCtr._index()
-GET    /pushMsg                  pc.wsapi.controllers.MsgPushCtr.pushMsg()
+POST    /pushMsg                  pc.wsapi.controllers.MsgPushCtr.pushMsg()
 
 
 
