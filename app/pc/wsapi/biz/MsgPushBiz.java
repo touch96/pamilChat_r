@@ -1,10 +1,8 @@
 package pc.wsapi.biz;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javapns.Push;
 import javapns.devices.implementations.basic.BasicDevice;
 import javapns.notification.AppleNotificationServer;
 import javapns.notification.AppleNotificationServerBasicImpl;
@@ -45,6 +43,10 @@ public class MsgPushBiz extends AbstractBiz {
 		String m_id = form.get("device")[0];
 		String id = form.get("id")[0];
 		
+		
+		String key = Messages.get("pamil.apns.key.path");
+		String pw = Messages.get("pamil.apns.key.pw");
+		
 		try {
 			Logger.info ("id : " + id);
 			Logger.info ("m_id : " + m_id);
@@ -67,7 +69,7 @@ public class MsgPushBiz extends AbstractBiz {
 		        //push messages
 		        Logger.debug (payload.toString());
 		        
-		        AppleNotificationServer appleNoti = new AppleNotificationServerBasicImpl(Messages.get("pamil.apns.key.path"), Messages.get("pamil.apns.key.pw"),true);
+		        AppleNotificationServer appleNoti = new AppleNotificationServerBasicImpl(key, pw,true);
 		        pushManager.initializeConnection(appleNoti);
 		        
 		        //send push
