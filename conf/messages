@@ -1,0 +1,2 @@
+pamil.apns.key.path=/usr/local/keys/pamilchatserverkey.p12
+pamil.apns.key.pw=1234
