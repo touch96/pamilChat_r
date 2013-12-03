@@ -24,7 +24,7 @@
        		    url: "/signIn",
        		    data: { m_id: $("#m_id").val(), id: $("#id").val(), pw: $("#pw").val() },
        		 	success: function(data) {
-                	 alert("ok : " + data.rtn.code);
+                	 alert("ok : " + data.code + ", " + data.params);
              	},
     			error: function(data) {
                 	alert("ng");

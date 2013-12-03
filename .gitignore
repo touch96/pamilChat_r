@@ -13,3 +13,17 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+
+.target/pc/wsapi/views/signIn.scala.html
+
+*.class
+
+.target/pc/wsapi/views/msgPush.scala.html
+
+.target/pc/wsapi/views/msgPush.scala.html
+
+.target/pc/wsapi/views/login.scala.html
+
+.gitignore
+
+.gitignore
