@@ -108,7 +108,7 @@ public class MsgPushBiz extends AbstractBiz {
 			Logger.info ("m_id : " + m_id);
 			//user存在チェック
 			Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-			Query<Users> query = finder.where("id='"+id+"' and m_id='"+m_id+"'");
+			Query<Users> query = finder.where("id='"+id+"' and device='"+m_id+"'");
 			Users users = query.findUnique();
 			
 			if (users != null && users.id.equals(id)) {
