@@ -8,10 +8,8 @@ import org.codehaus.jackson.JsonNode;
 
 import pc.wsapi.dbs.Users;
 import pc.wsapi.utils.JsonUtil;
-import play.Logger;
 import play.db.ebean.Model.Finder;
 import play.libs.Json;
-import play.libs.F.Callback;
 import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;
 
@@ -30,20 +28,20 @@ public class LoginBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		JsonNode result = Json.newObject();
 		
-		String id = js.get("id")[0];
-		String pw = js.get("pw")[0];
-		String m_id = js.get("device")[0];
+		String code = js.get("code")[0];
+		String password = js.get("password")[0];
+		String token = js.get("token")[0];
 		
 		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-		Query<Users> query = finder.where("id='"+id+"' and pw='"+pw+"'");
+		Query<Users> query = finder.where("code='"+code+"' and password='"+password+"'");
 		Users users = query.findUnique();
 		
 		if (users != null) {
-			if (m_id.equals(users.getDevice())) {
+			if (token.equals(users.getToken())) {
 				params.put(msg, "ok");
 				result = JsonUtil.setRtn(ok, params);
 			} else {
-				params.put(msg, "invaild m_id");
+				params.put(msg, "invaild token");
 				result = JsonUtil.setRtn(ng, params);
 			}
 		} else {

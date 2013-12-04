@@ -25,20 +25,20 @@ public class SignInBiz extends AbstractBiz {
 		Logger.debug("SignInBiz.execute");
 		JsonNode result = Json.newObject();
 		
-		String id = form.get("id")[0];
-		String pw = form.get("pw")[0];
-		String m_id = form.get("device")[0];
+		String code = form.get("code")[0];
+		String password = form.get("password")[0];
+		String token = form.get("token")[0];
 		
 		//save
 		Users users = new Users();
-		users.id  = id;
-		users.pw = pw;
-		users.device = m_id;
+		users.code  = code;
+		users.password = password;
+		users.token = token;
 		
 		boolean isExistsUser = Users.find.equals(users);
 		HashMap<String, Object> params = new HashMap<>();
 		if (!isExistsUser) {
-			users.pw = pw;
+			users.password = password;
 			users.save();
 			
 			params.put(msg, "user regist ok");

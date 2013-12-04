@@ -15,11 +15,25 @@ public class Friends extends Model {
 	
 	@NotNull
 	@Id
-	public String id;
+	public String code;
 	
 	@NotNull
-	public String f_id;
+	public String f_code;
 	
+	
+	
+	public String getCode() {
+		return code;
+	}
+
+	public String getF_code() {
+		return f_code;
+	}
+
+	public Date getCreateDt() {
+		return createDt;
+	}
+
 	@CreatedTimestamp
 	public Date createDt;
 	

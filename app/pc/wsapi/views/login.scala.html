@@ -6,11 +6,10 @@
 <script type="text/javascript" charset="utf-8">
     $(function() {
         $("#onSend").click(function () {
-            $("#onSend").click(function () {
            		$.ajax({
           		    type: "POST",
           		    url: "http://localhost:9000/autholization",
-          		    data: { m_id: $("#m_id").val(), id: $("#id").val(), pw: $("#pw").val() },
+          		    data: { token: $("#token").val(), code: $("#code").val(), password: $("#password").val() },
           		 	success: function(data) {
           		 		$("#onReceive").html("ok : " + data.code + ", " + data.params);
                 	},
@@ -20,15 +19,14 @@
        			complete : function(data) {
               		}
           		});
-      	  });
         });
     })
 </script>
 </head>
 <body>
-m_id : <input type="text" id="device" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
-id : <input type="text" id="id" value="testUser1"/><br/>
-pw : <input type="password" id="pw" value="aaaa"/><br/>
+token : <input type="text" id="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
+code : <input type="text" id="code" value="testUser1"/><br/>
+password : <input type="password" id="password" value="aaaa"/><br/>
 <input type="text" id="osKbn" name="osKbn" value="ios7"/>
 <button id="onSend">click send message!!!!!</button>
 <div id="onReceive">dummy</div>

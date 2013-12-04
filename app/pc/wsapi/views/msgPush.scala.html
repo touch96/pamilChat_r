@@ -20,7 +20,7 @@ $(function() {
            		 	/* enctype  : 'multipart/form-data',
            			contentType : false,
            			processData : false, */
-           		    data: { id: $("#id").val(), device: $("#device").val(),msg: $("#msg").val(), img: event.target.result },
+           		    data: { code: $("#code").val(), token: $("#token").val(),msg: $("#msg").val(), img: event.target.result },
            		 	success: function(data) {
                     	alert("ok : " + data.code + ", " + data.params);
                  	},
@@ -30,19 +30,32 @@ $(function() {
         			complete : function(data) {
                		}
            		});
-
-                
-                /* socket.send(JSON.stringify({data: data})); */
-               /* socket.send(data); */
             }
+        });
+        
+        $("#onSend").click(function () {
+       		$.ajax({
+      		    type: "POST",
+       		    url: "http://localhost:9000/pushMsg",
+       		    data: { code: $("#code").val(), token: $("#token").val(),msg: $("#msg").val()},
+     		 	success: function(data) {
+      		 		$("#onReceive").html("ok : " + data.code + ", " + data.params);
+            	},
+   			error: function(data) {
+               	alert("ng");
+          		},
+   			complete : function(data) {
+          		}
+      		});
+
          });
 })
 </script>
 </head>
 <body>
-id : <input type="text" id="id" value="testUser1"/><br/>
+code : <input type="text" id="code" value="testUser1"/><br/>
 msg : <input type="text" id="msg" value="aaaaa"/><br/>
-device : <input type="text" id="device" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
+token : <input type="text" id="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
 osKbn : <input type="text" id="osKbn" name="osKbn" value="ios7"/>
 <input type="file" id="fileInput"></input>
 <button id="onSend">click send message!!!!!</button>

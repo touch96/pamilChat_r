@@ -51,7 +51,7 @@ public class FriendMngBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		
 		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-		Query<Users> query = finder.where("id like '"+req_form.get("f_id")+"%'");
+		Query<Users> query = finder.where("code like '"+req_form.get("f_code")+"%'");
 		List<Users> users = query.findList();
 		
 		if (users != null) {
@@ -89,8 +89,8 @@ public class FriendMngBiz extends AbstractBiz {
 	private boolean chkFriend (Friends friends, Map<String, String[]> req_form) {
 		
 		//追加対象のfriendが、既に登録されたかを確認
-		friends.id = req_form.get("id")[0];
-		friends.f_id = req_form.get("f_id")[0];
+		friends.code = req_form.get("code")[0];
+		friends.f_code = req_form.get("f_code")[0];
 		return Friends.find.equals(friends);
 	}
 

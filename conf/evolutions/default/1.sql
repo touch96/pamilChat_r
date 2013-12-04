@@ -1,12 +1,12 @@
 create table users (
-    id                      varchar(100) not null,
-    pw                      varchar(100) not null,
-    device               varchar(200) not null,
+    code                      varchar(100) not null,
+    password                      varchar(100) not null,
+    token               varchar(200) not null,
 	createDt            date,
-    constraint pk_parent primary key (device));
+    constraint pk_parent primary key (code,token));
  
  create table friends (
- 	id                      varchar(100) not null,
- 	f_id                     varchar(100) not null,
+ 	code                      varchar(100) not null,
+ 	f_code                     varchar(100) not null,
  	createDt            date,
-    constraint pk_parent primary key (id,f_id));
+    constraint pk_parent primary key (code,f_code));

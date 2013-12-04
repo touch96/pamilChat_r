@@ -13,22 +13,22 @@ import play.db.ebean.Model;
 public class Users extends Model {
 	
 	@NotNull
-	public String id;
+	public String code;
 	@NotNull
-	public String pw;
+	public String password;
 	public String createdt;
 	
 	@Id
 	@NotNull
-	public String device;
+	public String token;
 	
 	
-	public String getId() {
-		return id;
+	public String getCode() {
+		return code;
 	}
 	
-	public String getPw() {
-		return pw;
+	public String getPassword() {
+		return password;
 	}
 	
 	public String getCreatedt() {
@@ -36,8 +36,8 @@ public class Users extends Model {
 	}
 	
 	
-	public String getDevice() {
-		return device;
+	public String getToken() {
+		return token;
 	}
 
 

@@ -52,25 +52,22 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put("msg", "no message");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		if (form.get("device") == null) {
-			params.put("msg", "no device");
+		if (form.get("token") == null) {
+			params.put("msg", "no token");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		if (form.get("id") == null) {
-			params.put("msg", "no id");
+		if (form.get("code") == null) {
+			params.put("msg", "no code");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		
-		String fileStr = form.get("img")[0];
-		fileStr = fileStr.substring(fileStr.indexOf(Constants.BASE64) + Constants.BASE64.length());
 		
 		if (result.size() > 0) {
 			return result;
 		}
 		
 		String msg = form.get("msg")[0];
-		String m_id = form.get("device")[0];
-		String id = form.get("id")[0];
+		String token = form.get("token")[0];
+		String code = form.get("code")[0];
 		
 		
 		String key = Messages.get("pamil.apns.key.path");
@@ -86,32 +83,35 @@ public class MsgPushBiz extends AbstractBiz {
 				Logger.debug ("sec : " + sec);
 				Logger.debug ("gateway_host : " + gateway_host);
 				Logger.debug ("gateway_port : " + gateway_port);
-				
-				Logger.debug ("fileStr : " + fileStr);
 			}
 			
-			//==================================//
-			//	Base64デコード	         //
-			//==================================//
-			byte[] outdata = Base64.decodeBase64(fileStr.getBytes());
-			//==================================//
-			//	結果書き出し	         //
-			//==================================//
-			File outf = new File("/Users/JP10844/398660229990_.txt");
-			FileOutputStream fo = new FileOutputStream(outf);
-			fo.write(outdata);
-			fo.close();
+			String fileStr = "";
+			if (form.get("img") != null) {
+				fileStr = form.get("img")[0];
+				fileStr = fileStr.substring(fileStr.indexOf(Constants.BASE64) + Constants.BASE64.length());
+				//==================================//
+				//	Base64デコード	         //
+				//==================================//
+				byte[] outdata = Base64.decodeBase64(fileStr.getBytes());
+				//==================================//
+				//	結果書き出し	         //
+				//==================================//
+				File outf = new File("/Users/JP10844/398660229990_.txt");
+				FileOutputStream fo = new FileOutputStream(outf);
+				fo.write(outdata);
+				fo.close();
+			}
 			
 			
 			
-			Logger.info ("id : " + id);
-			Logger.info ("m_id : " + m_id);
+			Logger.info ("code : " + code);
+			Logger.info ("token : " + token);
 			//user存在チェック
 			Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-			Query<Users> query = finder.where("id='"+id+"' and device='"+m_id+"'");
+			Query<Users> query = finder.where("code='"+code+"' and token='"+token+"'");
 			Users users = query.findUnique();
 			
-			if (users != null && users.id.equals(id)) {
+			if (users != null && users.code.equals(code)) {
 				PushNotificationManager pushManager = new PushNotificationManager();
 				PushNotificationPayload payload = PushNotificationPayload.complex();
 		        payload.addAlert(msg);
@@ -119,7 +119,7 @@ public class MsgPushBiz extends AbstractBiz {
 		        payload.addSound("default");
 		        payload.addCustomDictionary("id", "1");
 		        
-		        BasicDevice device = new BasicDevice(m_id);
+		        BasicDevice device = new BasicDevice(token);
 		        device.setDeviceId("iPhone");
 		        
 		        //push messages
