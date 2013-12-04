@@ -32,14 +32,14 @@ public class LoginBiz extends AbstractBiz {
 		
 		String id = js.get("id")[0];
 		String pw = js.get("pw")[0];
-		String m_id = js.get("m_id")[0];
+		String m_id = js.get("device")[0];
 		
 		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
 		Query<Users> query = finder.where("id='"+id+"' and pw='"+pw+"'");
 		Users users = query.findUnique();
 		
 		if (users != null) {
-			if (m_id.equals(users.getM_id())) {
+			if (m_id.equals(users.getDevice())) {
 				params.put(msg, "ok");
 				result = JsonUtil.setRtn(ok, params);
 			} else {

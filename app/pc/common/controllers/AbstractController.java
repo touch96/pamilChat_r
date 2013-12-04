@@ -1,5 +1,7 @@
 package pc.common.controllers;
 
+import java.util.Map;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -11,10 +13,23 @@ import play.mvc.WebSocket;
 
 public abstract class AbstractController extends Controller {
 	
+	private static Map<String, String[]> req_params;
+	
+	
+	
 //	protected boolean certification () {
 //		
 //	}
 	
+	public static Map<String, String[]> getReq_params() {
+		
+		req_params = request().body().asFormUrlEncoded();
+		
+		return req_params;
+	}
+
+
+
 	protected static class AstractCallback implements Callback<JsonNode> {
         private WebSocket.Out<JsonNode> out;
         public AstractCallback(WebSocket.Out<JsonNode> out) {

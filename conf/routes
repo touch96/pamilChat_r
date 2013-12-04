@@ -31,6 +31,10 @@ POST    /pushMsg                  pc.wsapi.controllers.MsgPushCtr.pushMsg()
 
 
 
+#################### friends manage
+GET    /friendsIndex                pc.wsapi.controllers.FriendMngCtr._index()
+GET    /friend_search                pc.wsapi.controllers.FriendMngCtr.searchFriend()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 

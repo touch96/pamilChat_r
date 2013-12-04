@@ -6,7 +6,7 @@ import org.codehaus.jackson.JsonNode;
 
 public abstract class AbstractBiz {
 	public abstract void execute (play.mvc.WebSocket.In<JsonNode> in, play.mvc.WebSocket.Out<JsonNode> out);
-	public abstract JsonNode execute (Map<String, String[]> js);
+	public abstract JsonNode execute (Map<String, String[]> req_form);
 	
 	protected static final String rtn = "rtn";
 	

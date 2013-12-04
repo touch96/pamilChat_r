@@ -1,5 +1,7 @@
 package pc.wsapi.biz;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,9 +13,11 @@ import javapns.notification.PushNotificationPayload;
 import javapns.notification.PushedNotification;
 import javapns.notification.ResponsePacket;
 
+import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonNode;
 import com.avaje.ebean.Query;
 
+import pc.wsapi.constants.Constants;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.utils.JsonUtil;
 import play.Logger;
@@ -39,6 +43,31 @@ public class MsgPushBiz extends AbstractBiz {
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
 		
+		if (form == null) {
+			params.put("msg", "no parameter");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		
+		if (form.get("msg") == null) {
+			params.put("msg", "no message");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		if (form.get("device") == null) {
+			params.put("msg", "no device");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		if (form.get("id") == null) {
+			params.put("msg", "no id");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		
+		String fileStr = form.get("img")[0];
+		fileStr = fileStr.substring(fileStr.indexOf(Constants.BASE64) + Constants.BASE64.length());
+		
+		if (result.size() > 0) {
+			return result;
+		}
+		
 		String msg = form.get("msg")[0];
 		String m_id = form.get("device")[0];
 		String id = form.get("id")[0];
@@ -46,8 +75,35 @@ public class MsgPushBiz extends AbstractBiz {
 		
 		String key = Messages.get("pamil.apns.key.path");
 		String pw = Messages.get("pamil.apns.key.pw");
+		String sec = Messages.get("pamil.apns.sec");
+		String gateway_host = Messages.get("pamil.apns.gateway.host");
+		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
 		
 		try {
+			if (Logger.isDebugEnabled()) {
+				Logger.debug ("key" + key);
+				Logger.debug ("pw : " + pw);
+				Logger.debug ("sec : " + sec);
+				Logger.debug ("gateway_host : " + gateway_host);
+				Logger.debug ("gateway_port : " + gateway_port);
+				
+				Logger.debug ("fileStr : " + fileStr);
+			}
+			
+			//==================================//
+			//	Base64デコード	         //
+			//==================================//
+			byte[] outdata = Base64.decodeBase64(fileStr.getBytes());
+			//==================================//
+			//	結果書き出し	         //
+			//==================================//
+			File outf = new File("/Users/JP10844/398660229990_.txt");
+			FileOutputStream fo = new FileOutputStream(outf);
+			fo.write(outdata);
+			fo.close();
+			
+			
+			
 			Logger.info ("id : " + id);
 			Logger.info ("m_id : " + m_id);
 			//user存在チェック
@@ -55,7 +111,7 @@ public class MsgPushBiz extends AbstractBiz {
 			Query<Users> query = finder.where("id='"+id+"' and m_id='"+m_id+"'");
 			Users users = query.findUnique();
 			
-//			if (users != null && users.id.equals(id)) {
+			if (users != null && users.id.equals(id)) {
 				PushNotificationManager pushManager = new PushNotificationManager();
 				PushNotificationPayload payload = PushNotificationPayload.complex();
 		        payload.addAlert(msg);
@@ -69,7 +125,8 @@ public class MsgPushBiz extends AbstractBiz {
 		        //push messages
 		        Logger.debug (payload.toString());
 		        
-		        AppleNotificationServer appleNoti = new AppleNotificationServerBasicImpl(key, pw,true);
+		        AppleNotificationServer appleNoti = 
+		        		new AppleNotificationServerBasicImpl(key, pw,sec,gateway_host,gateway_port);
 		        pushManager.initializeConnection(appleNoti);
 		        
 		        //send push
@@ -116,7 +173,7 @@ public class MsgPushBiz extends AbstractBiz {
 //						result = JsonUtil.setRtn(ng, params);
 //		            }
 //		        }
-//			}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -27,13 +27,13 @@ public class SignInBiz extends AbstractBiz {
 		
 		String id = form.get("id")[0];
 		String pw = form.get("pw")[0];
-		String m_id = form.get("m_id")[0];
+		String m_id = form.get("device")[0];
 		
 		//save
 		Users users = new Users();
 		users.id  = id;
 		users.pw = pw;
-		users.m_id = m_id;
+		users.device = m_id;
 		
 		boolean isExistsUser = Users.find.equals(users);
 		HashMap<String, Object> params = new HashMap<>();

@@ -36,6 +36,11 @@ public class MsgPushCtr extends AbstractController {
 	public static Result pushMsg () {
 		MsgPushBiz biz = new MsgPushBiz();
 		Map<String, String[]> form = request().body().asFormUrlEncoded();
+//		MultipartFormData multipartFormData = request().body().asMultipartFormData();
+//		
+//		FilePart image = multipartFormData.getFile("img");
+//		Map<String, String[]> form = multipartFormData.asFormUrlEncoded();
+		
 		return ok(biz.execute(form));
 	}
 

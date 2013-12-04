@@ -1,2 +1,5 @@
 pamil.apns.key.path=/usr/local/keys/pamilchatserverkey.p12
 pamil.apns.key.pw=1234
+pamil.apns.sec=PKCS12
+pamil.apns.gateway.host=gateway.sandbox.push.apple.com
+pamil.apns.gateway.port=2195

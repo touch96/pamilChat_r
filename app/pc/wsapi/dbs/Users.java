@@ -20,7 +20,7 @@ public class Users extends Model {
 	
 	@Id
 	@NotNull
-	public String m_id;
+	public String device;
 	
 	
 	public String getId() {
@@ -36,8 +36,8 @@ public class Users extends Model {
 	}
 	
 	
-	public String getM_id() {
-		return m_id;
+	public String getDevice() {
+		return device;
 	}
 
 
