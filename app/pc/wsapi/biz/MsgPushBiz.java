@@ -142,6 +142,7 @@ public class MsgPushBiz extends AbstractBiz {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			params.put(msg, e.fillInStackTrace());
 			result = JsonUtil.setRtn(error, params);
 			
 		}
