@@ -11,7 +11,7 @@ create table users (
  	createDt            date,
     constraint pk_parent primary key (code,f_code));
     
- create table friendRequest (
+ create table friendrequest (
  	s_code                      varchar(100) not null,
  	f_code                     varchar(100) not null,
  	isNew  boolean,

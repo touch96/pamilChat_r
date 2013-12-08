@@ -104,13 +104,13 @@ public class MsgPushBiz extends AbstractBiz {
 		
 		try {
 			//ファイル保存
-	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+image.getFilename();
+	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+send_code[0]+receive_code[0]+sdf1.format(new Date())+image.getFilename();
 //	        String contentType = image.getContentType();
 	        File file = image.getFile();
 	        
-	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-	        String filePath = Messages.get("pamil.file.path")+send_code[0]+receive_code[0]+sdf1.format(new Date())+"/";
-	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+receive_code[0]+sdf1.format(new Date())+"/";
+	        String filePath = Messages.get("pamil.file.path");
+	        String fileUrl = Messages.get("pamil.file.url");
 	        
 	        File dir = new File(filePath);
 	        

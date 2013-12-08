@@ -36,4 +36,3 @@ POST   /friend_request_list         pc.wsapi.controllers.FriendMngCtr.friend_req
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-
