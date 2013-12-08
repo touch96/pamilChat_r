@@ -1,6 +1,5 @@
 package pc.wsapi.controllers;
 
-import java.util.Map;
 
 import pc.common.controllers.AbstractController;
 import pc.wsapi.biz.FriendMngBiz;
@@ -17,26 +16,40 @@ public class FriendMngCtr extends AbstractController {
 	 * 
 	 * @return
 	 */
-	public static Result addFriend () {
+//	public static Result add () {
+//		FriendMngBiz biz = new FriendMngBiz();
+//		return ok(biz.add(getReq_params()));
+//	}
+	
+	public static Result friend_request () {
 		FriendMngBiz biz = new FriendMngBiz();
-		Map<String, String[]> param = getReq_params();
-		
-		return ok(biz.add(param));
+		return ok(biz.friend_request(getReq_params()));
 	}
 	
-	public static Result searchFriend () {
+	public static Result friend_request_confirm () {
 		FriendMngBiz biz = new FriendMngBiz();
-		Map<String, String[]> param = request().body().asFormUrlEncoded();
+		return ok(biz.friend_request_confirm(getReq_params()));
+	}
+	
+	public static Result friend_request_list () {
+		FriendMngBiz biz = new FriendMngBiz();
+		return ok(biz.friend_request_list(getReq_params()));
 		
-		return ok(biz.search(param));
+	}
+
+	public static Result search () {
+		FriendMngBiz biz = new FriendMngBiz();
+		return ok(biz.search(getReq_params()));
 	}
 	
-	public static Result removeFriend () {
-		return null;
+	public static Result remove () {
+		FriendMngBiz biz = new FriendMngBiz();
+		return ok(biz.remove(getReq_params()));
 	}
 	
-	public static Result getFriendList () {
-		return null;
+	public static Result selectList () {
+		FriendMngBiz biz = new FriendMngBiz();
+		return ok(biz.selectList(getReq_params()));
 	}
 
 }

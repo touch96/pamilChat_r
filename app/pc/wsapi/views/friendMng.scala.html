@@ -5,43 +5,64 @@
 <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("javascripts/jquery.httpclient.js")" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
-    $(function() {
-        $("#onSend").click(function () {
-        	/* var client = new HttpClient();
-        	
-        	client.postAsJsonAsync(
-        			'http://localhost:9000/signIn', 
-        			'm_id='+$("#m_id").val()+','+
-        			'id='+$("#id").val()+','+
-        			'pw='+$("#pw").val()
-        			, 
-        			'application/json', function (response) {
-       		},
-       		function (err) {
-       		}); */
-       		$.ajax({
-       			type: "get",
-       		    url: "http://localhost:9000/friend_search&f_code="+$("#f_code").val(),
-       		    /* data: { f_id: $("#f_id").val()}, */
-       		 	success: function(data) {
-                	 alert("ok : " + data.code + ", " + data.params);
-             	},
-    			error: function(data) {
-                	alert("ng");
-           		},
-    			complete : function(data) {
-           		}
-       		});
-
-       });
-    })
 </script>
 </head>
 <body>
-token : <input type="text" id="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
-f_code : <input type="text" id="f_code" value="testUser1"/><br/>
-<input type="text" id="osKbn" name="osKbn" value="ios7"/>
-<button id="onSend">click send message!!!!!</button>
-<div id="onReceive">dummy</div>
+<form action="/friend_search" method="post" >
+friend_search<br/>
+token : <input type="text" name="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+f_code : <input type="text" name="f_code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+
+<form action="/friend_add" method="post" >
+<br/>
+<br/>
+friend_add<br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+f_code : <input type="text" name="f_code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+<form action="/friend_selectList" method="post" >
+friend_selectList<br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+<form action="/friend_remove" method="post" >
+<br/>
+<br/>
+friend_remove<br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+f_code : <input type="text" name="f_code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+<form action="/friend_request" method="post" >
+<br/>
+<br/>
+friend_request<br/>
+s_code : <input type="text" name="s_code" value="testUser1"/><br/>
+f_code : <input type="text" name="f_code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+
+<form action="/friend_request_list" method="post" >
+<br/>
+<br/>
+friend_request_list<br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+<input type="submit" value="ok">
+</form>
+<form action="/friend_request_confirm" method="post" >
+<br/>
+<br/>
+friend_request_confirm<br/>
+s_code : <input type="text" name="s_code" value="testUser1"/><br/>
+f_code : <input type="text" name="f_code" value="testUser1"/><br/>
+status : <input type="text" name="status" value="00"/><br/>
+<input type="submit" value="ok">
+</form>
+
+
 </body>
 </html>

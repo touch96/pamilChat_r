@@ -46,11 +46,7 @@ public class SignInBiz extends AbstractBiz {
 		} else {
 			params.put(msg, "exists user");
 			result = JsonUtil.setRtn(ng, params);
-			
-		}
-		
-		
-		
+		}		
 		return result;
 	}
 }

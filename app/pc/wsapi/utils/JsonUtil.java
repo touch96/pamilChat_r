@@ -9,7 +9,7 @@ import play.libs.Json;
 public class JsonUtil {
 	public static JsonNode setRtn (String code, HashMap<String, Object> params) {
 		Returns rtn = new Returns();
-		rtn.setCode(code);
+		rtn.setReturnCode(code);
 		rtn.setParams(params);
 		
 		return Json.toJson(rtn);

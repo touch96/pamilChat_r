@@ -2,17 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-#################### test
-GET     /                           controllers.Application.index()
-
-GET     /echowebsocketindex         ws.controllers.TestWs001.echowebsocketindex()
-GET     /echowebsocketmessage       ws.controllers.TestWs001.echowebsocketmessage()
-
-GET		/uploadIndex				ws.controllers.TestWs002._index()
-GET     /upload       				ws.controllers.TestWs002.upload()
-
-
-
 
 #################### sign in
 GET     /signInIndex                pc.wsapi.controllers.SignInCtr._index()
@@ -20,20 +9,29 @@ POST    /signIn                     pc.wsapi.controllers.SignInCtr.signIn()
 
 #################### login
 GET     /loginIndex                pc.wsapi.controllers.LoginCtr._index()
-GET     /autholization              pc.wsapi.controllers.LoginCtr.autholization()
+POST     /login              pc.wsapi.controllers.LoginCtr.login()
 
 
 
-#################### push
-GET    /pushSet                pc.wsapi.controllers.MsgPushCtr.pushSet()
-GET    /pushIndex                pc.wsapi.controllers.MsgPushCtr._index()
-POST    /pushMsg                  pc.wsapi.controllers.MsgPushCtr.pushMsg()
-
+#################### message
+GET    /sendMessageIndex             pc.wsapi.controllers.MsgPushCtr._index()
+POST   /sendMsg                      pc.wsapi.controllers.MsgPushCtr.sendMessage()
+POST   /getNoreadMsgList             pc.wsapi.controllers.MsgPushCtr.getNoreadMsgList()
+POST   /getMsg                       pc.wsapi.controllers.MsgPushCtr.getMessage()
 
 
 #################### friends manage
 GET    /friendsIndex                pc.wsapi.controllers.FriendMngCtr._index()
-GET    /friend_search                pc.wsapi.controllers.FriendMngCtr.searchFriend()
+POST   /friend_search               pc.wsapi.controllers.FriendMngCtr.search()
+# POST   /friend_add                  pc.wsapi.controllers.FriendMngCtr.add()
+POST   /friend_selectList           pc.wsapi.controllers.FriendMngCtr.selectList()
+POST   /friend_remove               pc.wsapi.controllers.FriendMngCtr.remove()
+POST   /friend_request              pc.wsapi.controllers.FriendMngCtr.friend_request()
+POST   /friend_request_confirm      pc.wsapi.controllers.FriendMngCtr.friend_request_confirm()
+POST   /friend_request_list         pc.wsapi.controllers.FriendMngCtr.friend_request_list()
+
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

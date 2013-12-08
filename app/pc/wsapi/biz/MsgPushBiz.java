@@ -1,29 +1,29 @@
 package pc.wsapi.biz;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javapns.devices.implementations.basic.BasicDevice;
-import javapns.notification.AppleNotificationServer;
-import javapns.notification.AppleNotificationServerBasicImpl;
-import javapns.notification.PushNotificationManager;
-import javapns.notification.PushNotificationPayload;
-import javapns.notification.PushedNotification;
-import javapns.notification.ResponsePacket;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonNode;
 import com.avaje.ebean.Query;
 
-import pc.wsapi.constants.Constants;
+
+import pc.wsapi.dbs.Msghistory;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.utils.JsonUtil;
+import pc.wsapi.utils.PushUtil;
 import play.Logger;
 import play.db.ebean.Model.Finder;
 import play.i18n.Messages;
 import play.libs.Json;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;
 
@@ -39,147 +39,181 @@ public class MsgPushBiz extends AbstractBiz {
 
 	@Override
 	public JsonNode execute(Map<String, String[]> form) {
-		Logger.debug ("MsgPushBiz - execute");
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public  JsonNode sendMessage (String url , MultipartFormData form) {
+		Logger.debug ("MsgPushBiz - sendMessage");
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
 		
 		if (form == null) {
-			params.put("msg", "no parameter");
+			params.put(msg, "no parameter");
+			result = JsonUtil.setRtn(ng, params);
+			return result;
+		}
+		
+		String[] token = form.asFormUrlEncoded().get("token");
+		String[] send_code = form.asFormUrlEncoded().get("send_code");
+		String[] receive_code = form.asFormUrlEncoded().get("receive_code");
+		String[] sec = form.asFormUrlEncoded().get("sec");
+		FilePart image = form.getFile("image");
+		
+		if (token == null) {
+			params.put(msg, "no token");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		if (send_code == null) {
+			params.put(msg, "no send_code");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		if (receive_code == null) {
+			params.put(msg, "no receive_code");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		if (sec == null) {
+			params.put(msg, "no sec");
 			result = JsonUtil.setRtn(ng, params);
 		}
 		
-		if (form.get("msg") == null) {
-			params.put("msg", "no message");
+		if (image == null) {
+			params.put(msg, "no file");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		if (form.get("token") == null) {
-			params.put("msg", "no token");
+		
+		//user存在チェック
+		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
+		Query<Users> query = finder.where("code='"+receive_code[0]+"'");
+		Users users = query.findUnique();
+		
+		if (users.token == null) {
+			params.put(msg, "no recieve user");
 			result = JsonUtil.setRtn(ng, params);
+			
 		}
-		if (form.get("code") == null) {
-			params.put("msg", "no code");
-			result = JsonUtil.setRtn(ng, params);
-		}
+		
 		
 		if (result.size() > 0) {
 			return result;
 		}
 		
-		String msg = form.get("msg")[0];
-		String token = form.get("token")[0];
-		String code = form.get("code")[0];
-		
-		
-		String key = Messages.get("pamil.apns.key.path");
-		String pw = Messages.get("pamil.apns.key.pw");
-		String sec = Messages.get("pamil.apns.sec");
-		String gateway_host = Messages.get("pamil.apns.gateway.host");
-		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
-		
 		try {
-			if (Logger.isDebugEnabled()) {
-				Logger.debug ("key" + key);
-				Logger.debug ("pw : " + pw);
-				Logger.debug ("sec : " + sec);
-				Logger.debug ("gateway_host : " + gateway_host);
-				Logger.debug ("gateway_port : " + gateway_port);
-			}
+			//ファイル保存
+	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+image.getFilename();
+//	        String contentType = image.getContentType();
+	        File file = image.getFile();
+	        
+	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+	        String filePath = Messages.get("pamil.file.path")+send_code[0]+receive_code[0]+sdf1.format(new Date())+"/";
+	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+receive_code[0]+sdf1.format(new Date())+"/";
+	        
+	        File dir = new File(filePath);
+	        
+	        if (!dir.exists()) {
+	        	dir.mkdir();
+	        }
+	        
+        	if (file.renameTo(new File(filePath+fileName))) {
+        		url = "http://"+url + fileUrl + fileName;
+        	} else {
+        		//ファイル保存が失敗した場合の実装（エラー画像を表示）
+        	}
 			
-			String fileStr = "";
-			if (form.get("img") != null) {
-				fileStr = form.get("img")[0];
-				fileStr = fileStr.substring(fileStr.indexOf(Constants.BASE64) + Constants.BASE64.length());
-				//==================================//
-				//	Base64デコード	         //
-				//==================================//
-				byte[] outdata = Base64.decodeBase64(fileStr.getBytes());
-				//==================================//
-				//	結果書き出し	         //
-				//==================================//
-				File outf = new File("/Users/JP10844/398660229990_.txt");
-				FileOutputStream fo = new FileOutputStream(outf);
-				fo.write(outdata);
-				fo.close();
-			}
+			//dbへ内容格納
+			Msghistory msghistory = new Msghistory();
+			msghistory.recieve_code = receive_code[0];
+			msghistory.send_code = send_code[0];
+			msghistory.isnew = true;
+			msghistory.sec = Integer.parseInt(sec[0]);
+			msghistory.img = url;
+			msghistory.save();
 			
+			//友達にプッシュ
+			PushUtil.push(token[0], "you have message");
 			
-			
-			Logger.info ("code : " + code);
-			Logger.info ("token : " + token);
-			//user存在チェック
-			Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-			Query<Users> query = finder.where("code='"+code+"' and token='"+token+"'");
-			Users users = query.findUnique();
-			
-			if (users != null && users.code.equals(code)) {
-				PushNotificationManager pushManager = new PushNotificationManager();
-				PushNotificationPayload payload = PushNotificationPayload.complex();
-		        payload.addAlert(msg);
-		        payload.addBadge(1);
-		        payload.addSound("default");
-		        payload.addCustomDictionary("id", "1");
-		        
-		        BasicDevice device = new BasicDevice(token);
-		        device.setDeviceId("iPhone");
-		        
-		        //push messages
-		        Logger.debug (payload.toString());
-		        
-		        AppleNotificationServer appleNoti = 
-		        		new AppleNotificationServerBasicImpl(key, pw,sec,gateway_host,gateway_port);
-		        pushManager.initializeConnection(appleNoti);
-		        
-		        //send push
-		        PushedNotification pushed = pushManager.sendNotification(device, payload);
-		        
-		        ResponsePacket res = pushed.getResponse();
-		        
-		        if (res != null) {
-		        	Logger.debug("isErrorResponsePacket : " + res.isErrorResponsePacket());
-		        	Logger.debug("isValidErrorMessage   : " + res.isValidErrorMessage());
-		        	Logger.debug("getMessage            : " + res.getMessage());
-		        	
-		        	params.put(msg, "ok");
-		        	result = JsonUtil.setRtn(ok, params);
-		        } else {
-		        	params.put(msg, "no response");
-		        	result = JsonUtil.setRtn(ng, params);
-		        }
-		        
-//		        List<PushedNotification> NOTIFICATIONS = 
-//		        		Push.payload(payload, Messages.get("pamil.apns.key.path"), Messages.get("pamil.apns.key.pw"), true, device);
-//		        
-//		        for (PushedNotification NOTIFICATION : NOTIFICATIONS) {
-//		            if (NOTIFICATION.isSuccessful()) {
-//	                    /* APPLE ACCEPTED THE NOTIFICATION AND SHOULD DELIVER IT */  
-//	                    /* STILL NEED TO QUERY THE FEEDBACK SERVICE REGULARLY */
-//						params.put(msg, "ok");
-//						result = JsonUtil.setRtn(ok, params);
-//		            } 
-//		            else {
-//	                    String INVALIDTOKEN = NOTIFICATION.getDevice().getToken();
-//	                    /* ADD CODE HERE TO REMOVE INVALIDTOKEN FROM YOUR DATABASE */  
-//
-//	                    /* FIND OUT MORE ABOUT WHAT THE PROBLEM WAS */  
-//	                    Exception THEPROBLEM = NOTIFICATION.getException();
-//	                    THEPROBLEM.printStackTrace();
-//
-//	                    /* IF THE PROBLEM WAS AN ERROR-RESPONSE PACKET RETURNED BY APPLE, GET IT */  
-//	                    ResponsePacket THEERRORRESPONSE = NOTIFICATION.getResponse();
-//	                    if (THEERRORRESPONSE != null) {
-//	                    	Logger.debug(THEERRORRESPONSE.getMessage());
-//	                    }
-//						params.put(msg, THEERRORRESPONSE.getMessage());
-//						result = JsonUtil.setRtn(ng, params);
-//		            }
-//		        }
-			}
+			//returnコード
+			params.put(msg, "ok");
+			result = JsonUtil.setRtn(ok, params);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = JsonUtil.setRtn(error, params);
+			
 		}
 		
 		return result;
 	}
+	
+	/**
+	 * 未読のメッセージ受信
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public JsonNode getNoreadMsgList (Map<String, String[]> form) {
+		Logger.debug ("MsgPushBiz - getNoreadMsgList");
+		JsonNode result = Json.newObject();
+		HashMap<String, Object> params = new HashMap<>();
+		String code = form.get("code")[0];
+		
+		//メッセージ取得
+		Query<Msghistory> query = Msghistory.find.where("recieve_code='"+code+"'");
+		List<Msghistory> msgList = query.findList();
+		
+		
+		if (msgList != null && msgList.size() > 0) {
+			params.put(msg, "have message");
+			params.put(messageList, msgList);
+			result = JsonUtil.setRtn(ok, params);
+			
+			//取得したメッセージを既読にする
+			for (Msghistory msghistory : msgList) {
+				msghistory.isnew = false;
+				msghistory.update();
+			}
+		} else {
+			params.put(msg, "no message");
+			result = JsonUtil.setRtn(ng, params);
+		}
+
+		return result;
+	}
+	
+	public File getMessage (Map<String, String[]> form) {
+		Logger.debug ("MsgPushBiz - getMessage");
+		JsonNode result = Json.newObject();
+		HashMap<String, Object> params = new HashMap<>();
+		String recieve_code = form.get("receive_code")[0];
+		int msghistoryseq = Integer.parseInt(form.get("msghistoryseq")[0]);
+		
+		Query<Msghistory> query = Msghistory.find.where("msghistoryseq='"+msghistoryseq+"' and recieve_code='"+recieve_code+"'");
+		Msghistory msghistory = query.findUnique();
+		
+		if (StringUtils.isNotEmpty(msghistory.getImg())) {
+			String imgPath = msghistory.getImg();
+			File imgFile = new File(imgPath);
+			
+			if (imgFile.exists()) {
+				return imgFile;
+			} else {
+				return null;
+			}
+			
+//			params.put(msg, "image send");
+//			params.put(image, imgFile);
+//			params.put(sec, msghistory.sec);
+//			result = JsonUtil.setRtn(ok, params);
+		} else {
+			return null;
+//			params.put(msg, "no image");
+//			result = JsonUtil.setRtn(ng, params);
+		}
+	}
+	
+	
 }

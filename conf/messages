@@ -3,3 +3,7 @@ pamil.apns.key.pw=1234
 pamil.apns.sec=PKCS12
 pamil.apns.gateway.host=gateway.sandbox.push.apple.com
 pamil.apns.gateway.port=2195
+
+
+pamil.file.path=./public/uploaded_images/
+pamil.file.url=/assets/uploaded_images/

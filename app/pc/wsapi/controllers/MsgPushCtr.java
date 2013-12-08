@@ -1,14 +1,14 @@
 package pc.wsapi.controllers;
 
-import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
+import java.io.File;
 
 import pc.common.controllers.AbstractController;
+
 import pc.wsapi.biz.MsgPushBiz;
-import pc.wsapi.biz.PushSetBiz;
 import play.mvc.Result;
-import play.mvc.WebSocket;
+
+import play.mvc.BodyParser;
 
 public class MsgPushCtr extends AbstractController {
 
@@ -18,30 +18,29 @@ public class MsgPushCtr extends AbstractController {
 	}
 	
 	
-	public static WebSocket<JsonNode> pushSet () {
-		return new WebSocket<JsonNode> () {
-
-			@Override
-			public void onReady(play.mvc.WebSocket.In<JsonNode> in,
-					play.mvc.WebSocket.Out<JsonNode> out) {
-				
-				PushSetBiz biz = new PushSetBiz();
-				biz.execute(in, out);
-			}
-		};
-		
+	@BodyParser.Of(BodyParser.MultipartFormData.class)
+	public static Result sendMessage () {
+		MsgPushBiz biz = new MsgPushBiz();
+		return ok(biz.sendMessage(currentUrl(), getMultipartFormData()));
 	}
 	
 	
-	public static Result pushMsg () {
+	public static Result getMessage () {
 		MsgPushBiz biz = new MsgPushBiz();
-		Map<String, String[]> form = request().body().asFormUrlEncoded();
-//		MultipartFormData multipartFormData = request().body().asMultipartFormData();
-//		
-//		FilePart image = multipartFormData.getFile("img");
-//		Map<String, String[]> form = multipartFormData.asFormUrlEncoded();
 		
-		return ok(biz.execute(form));
+		File img = biz.getMessage(getReq_params());
+		
+		response().setContentType("application/x-download");  
+		response().setHeader("Content-disposition","attachment; filename=" + img.getName()); 
+		
+		
+		return ok(img);
+	}
+	
+	public static Result getNoreadMsgList () {
+		MsgPushBiz biz = new MsgPushBiz();
+		return ok(biz.getNoreadMsgList(getReq_params()));
+		
 	}
 
 

@@ -3,14 +3,14 @@ package pc.wsapi.utils;
 import java.util.HashMap;
 
 public class Returns {
-	private String code;
+	private String returnCode;
 	private HashMap<String, Object> params;
 	
-	public String getCode() {
-		return code;
+	public String getReturnCode() {
+		return returnCode;
 	}
-	public void setCode(String code) {
-		this.code = code;
+	public void setReturnCode(String returnCode) {
+		this.returnCode = returnCode;
 	}
 	public HashMap<String, Object> getParams() {
 		return params;

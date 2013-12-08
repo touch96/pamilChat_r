@@ -4,7 +4,7 @@
 <head>
 <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
-    $(function() {
+/*     $(function() {
         $("#onSend").click(function () {
            		$.ajax({
           		    type: "POST",
@@ -21,14 +21,14 @@
           		});
         });
     })
-</script>
+ */</script>
 </head>
 <body>
-token : <input type="text" id="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
-code : <input type="text" id="code" value="testUser1"/><br/>
-password : <input type="password" id="password" value="aaaa"/><br/>
-<input type="text" id="osKbn" name="osKbn" value="ios7"/>
-<button id="onSend">click send message!!!!!</button>
-<div id="onReceive">dummy</div>
+<form action="/login" method="post">
+token : <input type="text" name="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
+code : <input type="text" name="code" value="testUser1"/><br/>
+password : <input type="password" name="password" value="1234"/><br/>
+<input type="submit" value="ok" />
+</form>
 </body>
 </html>

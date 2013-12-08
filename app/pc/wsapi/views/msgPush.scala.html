@@ -2,63 +2,39 @@
 
 <html>
 <head>
-<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("public/javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
 $(function() {
-        $("#fileInput").change(function(event){
-            var file = event.target.files[0];
-            var fileReader = new FileReader();
-            var data = {};
-
-            fileReader.readAsDataURL(file);
-            fileReader.onload = function(event) {
-                data.file = event.target.result;
-				/* alert(event.target.result); */
-          		$.ajax({
-           		    type: "POST",
-           		    url: "http://localhost:9000/pushMsg",
-           		 	/* enctype  : 'multipart/form-data',
-           			contentType : false,
-           			processData : false, */
-           		    data: { code: $("#code").val(), token: $("#token").val(),msg: $("#msg").val(), img: event.target.result },
-           		 	success: function(data) {
-                    	alert("ok : " + data.code + ", " + data.params);
-                 	},
-        			error: function(data) {
-                    	alert("ng");
-               		},
-        			complete : function(data) {
-               		}
-           		});
-            }
-        });
-        
-        $("#onSend").click(function () {
-       		$.ajax({
-      		    type: "POST",
-       		    url: "http://localhost:9000/pushMsg",
-       		    data: { code: $("#code").val(), token: $("#token").val(),msg: $("#msg").val()},
-     		 	success: function(data) {
-      		 		$("#onReceive").html("ok : " + data.code + ", " + data.params);
-            	},
-   			error: function(data) {
-               	alert("ng");
-          		},
-   			complete : function(data) {
-          		}
-      		});
-
-         });
+      $("#onSend").click(function () {
+    	  $("#fileform").submit();
+       });
 })
 </script>
 </head>
 <body>
-code : <input type="text" id="code" value="testUser1"/><br/>
-msg : <input type="text" id="msg" value="aaaaa"/><br/>
-token : <input type="text" id="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
-osKbn : <input type="text" id="osKbn" name="osKbn" value="ios7"/>
-<input type="file" id="fileInput"></input>
-<button id="onSend">click send message!!!!!</button>
-<div id="onReceive">dummy</div>
+/sendMsg<br/>
+<form action="/sendMsg" id="fileform" method="post" enctype="multipart/form-data">
+send_code : <input type="text" name="send_code" value="testUser1"/><br/>
+receive_code : <input type="text" name="receive_code" value="testUser1"/><br/>
+sec : <input type="text" name="sec" value="3"/><br/>
+token : <input type="text" name="token" value="4a88decf09e2538310d4f114bc8681e7f1bcf67f646d14268b5c14b47207ba61"/><br/>
+image : <input type="file" name="image"></input>
+<input type="submit" value="ok" />
+</form>
+<br/>
+<br/>
+/getMsg<br/>
+<form action="/getMsg" id="fileform" method="post">
+msghistoryseq : <input type="text" name="msghistoryseq" value="8"/><br/>
+receive_code : <input type="text" name="receive_code" value="testUser1"/><br/>
+<input type="submit" value="ok" />
+</form>
+<br/>
+<br/>
+/getNoreadMsgList
+<form action="/getNoreadMsgList" id="fileform" method="post">
+code : <input type="text" name="code" value="testUser1"/><br/>
+<input type="submit" value="ok" />
+</form>
 </body>
 </html>

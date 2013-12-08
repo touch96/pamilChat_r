@@ -30,12 +30,12 @@ public class Friends extends Model {
 		return f_code;
 	}
 
-	public Date getCreateDt() {
-		return createDt;
+	public Date getCreatedt() {
+		return createdt;
 	}
 
 	@CreatedTimestamp
-	public Date createDt;
+	public Date createdt;
 	
 	public static Finder<Long,Friends> find = new Finder<Long,Friends>(
 		    Long.class, Friends.class
