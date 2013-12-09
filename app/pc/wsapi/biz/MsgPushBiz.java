@@ -112,16 +112,25 @@ public class MsgPushBiz extends AbstractBiz {
 	        String filePath = Messages.get("pamil.file.path")+send_code[0]+receive_code[0]+sdf1.format(new Date());
 	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+receive_code[0]+sdf1.format(new Date());
 	        
+	        Logger.debug("filePath : " + filePath);
+	        Logger.debug("fileUrl : " + fileUrl);
+	        Logger.debug("fileName : " + fileName);
+	        
 	        File dir = new File(filePath);
 	        
 	        if (!dir.exists()) {
-	        	dir.mkdir();
+	        	if (!dir.mkdir()) {
+	        		Logger.debug("faild make dir");
+	        	}
 	        }
 	        
         	if (file.renameTo(new File(filePath+"/"+fileName))) {
+        		Logger.debug("success file make : " + (filePath+"/"+fileName));
         		url = "http://"+url + fileUrl + "/" + fileName;
+        		Logger.debug("url : " + url);
         	} else {
         		//ファイル保存が失敗した場合の実装（エラー画像を表示）
+        		Logger.debug("フィアル作成失敗");
         	}
 			
 			//dbへ内容格納
