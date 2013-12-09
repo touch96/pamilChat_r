@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.validation.NotNull;
 
 import play.db.ebean.Model;
@@ -16,6 +17,7 @@ public class Users extends Model {
 	public String code;
 	@NotNull
 	public String password;
+	@CreatedTimestamp
 	public String createdt;
 	
 	@Id
