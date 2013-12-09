@@ -67,7 +67,7 @@ public class FriendMngBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		String code = req_form.get("code")[0];
 		 
-		Query<Friendrequest> query = Friendrequest.find.where("f_code = '"+code+"'");
+		Query<Friendrequest> query = Friendrequest.find.where("f_code = '"+code+"' and status='00'");
 		
 		List <Friendrequest> list = query.findList();
 		
@@ -78,14 +78,14 @@ public class FriendMngBiz extends AbstractBiz {
 			
 			
 			//update isnew
-			for (Friendrequest frq : list) {
-				Friendrequest friendrequest = new Friendrequest();
-				friendrequest.s_code = code;
-				friendrequest.f_code = frq.f_code;
-				friendrequest.isnew = false;
-				
-				friendrequest.update();
-			}
+//			for (Friendrequest frq : list) {
+//				Friendrequest friendrequest = new Friendrequest();
+//				friendrequest.s_code = frq.s_code;
+//				friendrequest.f_code = frq.f_code;
+//				friendrequest.isnew = false;
+//				
+//				friendrequest.update();
+//			}
 		} else {
 			params.put(msg, "no request");
 			result = JsonUtil.setRtn(ng, params);
