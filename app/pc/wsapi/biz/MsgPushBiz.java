@@ -109,8 +109,8 @@ public class MsgPushBiz extends AbstractBiz {
 //	        String contentType = image.getContentType();
 	        File file = image.getFile();
 	        
-	        String filePath = Messages.get("pamil.file.path");
-	        String fileUrl = Messages.get("pamil.file.url");
+	        String filePath = Messages.get("pamil.file.path")+send_code[0]+receive_code[0]+sdf1.format(new Date());
+	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+receive_code[0]+sdf1.format(new Date());
 	        
 	        File dir = new File(filePath);
 	        
@@ -118,8 +118,8 @@ public class MsgPushBiz extends AbstractBiz {
 	        	dir.mkdir();
 	        }
 	        
-        	if (file.renameTo(new File(filePath+fileName))) {
-        		url = "http://"+url + fileUrl + fileName;
+        	if (file.renameTo(new File(filePath+"/"+fileName))) {
+        		url = "http://"+url + fileUrl + "/" + fileName;
         	} else {
         		//ファイル保存が失敗した場合の実装（エラー画像を表示）
         	}

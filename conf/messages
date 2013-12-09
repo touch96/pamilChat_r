@@ -5,5 +5,5 @@ pamil.apns.gateway.host=gateway.sandbox.push.apple.com
 pamil.apns.gateway.port=2195
 
 
-pamil.file.path=/var/www/
-pamil.file.url=/base/
+pamil.file.path=/usr/local/uploaded_images/
+pamil.file.url=/uploaded_images/
