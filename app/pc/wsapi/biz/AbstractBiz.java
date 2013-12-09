@@ -15,7 +15,7 @@ public abstract class AbstractBiz {
 	protected static final String error = "error";
 	protected static final String msg = "msg";
 	protected static final String messageList = "messageList";
-	protected static final String uList = "usersList";
+	protected static final String friendsList = "friendsList";
 	protected static final String image = "image";
 	protected static final String sec = "sec";
 }

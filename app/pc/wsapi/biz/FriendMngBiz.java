@@ -192,6 +192,7 @@ public class FriendMngBiz extends AbstractBiz {
 		if (frList != null && frList.size() > 0) {
 			params.put(msg, "have friends");
 			params.put(friendsList, frList);
+			
 			result = JsonUtil.setRtn(ok, params);
 		} else {
 			params.put(msg, "no friends");
