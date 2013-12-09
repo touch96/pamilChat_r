@@ -24,6 +24,26 @@ public class SignInBiz extends AbstractBiz {
 	public JsonNode execute(Map<String, String[]> form) {
 		Logger.debug("SignInBiz.execute");
 		JsonNode result = Json.newObject();
+		HashMap<String, Object> params = new HashMap<>();
+		
+		if (form.get("code") == null) {
+			params.put(msg, "code is empty");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		
+		if (form.get("password") == null) {
+			params.put(msg, "password is empty");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		
+		if (form.get("token") == null) {
+			params.put(msg, "token is empty");
+			result = JsonUtil.setRtn(ng, params);
+		}
+		
+		if (result.size() > 0) {
+			return result;
+		}
 		
 		String code = form.get("code")[0];
 		String password = form.get("password")[0];
@@ -36,7 +56,6 @@ public class SignInBiz extends AbstractBiz {
 		users.token = token;
 		
 		boolean isExistsUser = Users.find.equals(users);
-		HashMap<String, Object> params = new HashMap<>();
 		if (!isExistsUser) {
 			users.password = password;
 			users.save();

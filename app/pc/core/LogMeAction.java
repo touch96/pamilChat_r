@@ -1,5 +1,8 @@
 package pc.core;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import play.Logger;
 import play.mvc.Action;
 import play.mvc.Http;
@@ -11,6 +14,24 @@ public class LogMeAction extends Action<LogMe>
     public Result call(Http.Context context) throws Throwable
     {
         Logger.debug("request().path()     : " + context.request().path());
+        
+        if(Logger.isDebugEnabled()) {
+            Map<String, String[]> map = context.request().body().asFormUrlEncoded();
+            
+            if (map != null) {
+            	for(Entry<String, String[]> entry : map.entrySet()){
+            		String[] values = entry.getValue();
+            		for (String value : values) {
+            			Logger.debug("value["+entry.getKey()+"] : " + value);
+            		}
+            	}
+            }
+            
+            map.entrySet();
+            
+        	
+        }
+        
         return delegate.call(context);
     }
     
