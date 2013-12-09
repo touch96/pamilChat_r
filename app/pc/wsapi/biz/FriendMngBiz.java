@@ -116,7 +116,7 @@ public class FriendMngBiz extends AbstractBiz {
 			
 			friendrequest.update();
 			
-			if ("00".equals(status)) {
+			if ("01".equals(status)) {
 				add(req_form);
 			}
 			
@@ -186,12 +186,12 @@ public class FriendMngBiz extends AbstractBiz {
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
 		String code = req_form.get("code")[0];
-		Query<Users> query = Users.find.where("code like '"+code+"%'");
-		List<Users> usersList = query.findList();
+		Query<Friends> query = Friends.find.where("code = '"+code+"'");
+		List<Friends> frList = query.findList();
 		
-		if (usersList != null && usersList.size() > 0) {
+		if (frList != null && frList.size() > 0) {
 			params.put(msg, "have friends");
-			params.put(uList, usersList);
+			params.put(friendsList, frList);
 			result = JsonUtil.setRtn(ok, params);
 		} else {
 			params.put(msg, "no friends");
