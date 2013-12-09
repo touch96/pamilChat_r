@@ -17,7 +17,8 @@ public class Users extends Model {
 	public String code;
 	@NotNull
 	public String password;
-	@CreatedTimestamp
+	
+	
 	public String createdt;
 	
 	@Id

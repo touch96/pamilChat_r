@@ -52,20 +52,27 @@ public class PushUtil {
         //send push
         PushedNotification pushed = pushManager.sendNotification(device, payload);
         
-        ResponsePacket res = pushed.getResponse();
         
-        if (res != null) {
-        	Logger.debug("isErrorResponsePacket : " + res.isErrorResponsePacket());
-        	Logger.debug("isValidErrorMessage   : " + res.isValidErrorMessage());
-        	Logger.debug("getMessage            : " + res.getMessage());
-        	
-        	return false;
-        }
+		if (pushed.isSuccessful()) {
+			/* Apple accepted the notification and should deliver it */  
+			Logger.debug("Push notification sent successfully to: " +
+			pushed.getDevice().getToken());
+		/* Still need to query the Feedback Service regularly */  
+		} else {
+			String invalidToken = pushed.getDevice().getToken();
+			Logger.warn ("Push notification sent failed to : " + invalidToken);
+			/* Add code here to remove invalidToken from your database */  
+		}
+        
+		for ( Device dev : feedback() ) {
+			Logger.debug("dev.getToken() : " + dev.getToken());
+			Logger.debug("dev.getDeviceId() : " + dev.getDeviceId());
+		}
         
         return true;
 	}
 	
-	public static ListIterator<Device> feedback (int count) throws Exception {
+	public static LinkedList<Device> feedback () throws Exception {
 		String key = Messages.get("pamil.apns.key.path.real");
 		String pw = Messages.get("pamil.apns.key.pw.real");
 		String sec = Messages.get("pamil.apns.sec");
@@ -75,8 +82,6 @@ public class PushUtil {
 		FeedbackServiceManager feedbackManager = new FeedbackServiceManager();
 		AppleFeedbackServerBasicImpl server = new AppleFeedbackServerBasicImpl(key, pw, sec,feedback_host,feedback_port);
 		
-		LinkedList<Device> devices = feedbackManager.getDevices(server);
-		
-		return devices.listIterator();
+		return feedbackManager.getDevices(server);
 	}
 }
