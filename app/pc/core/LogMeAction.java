@@ -22,7 +22,7 @@ public class LogMeAction extends Action<LogMe>
             	for(Entry<String, String[]> entry : map.entrySet()){
             		String[] values = entry.getValue();
             		for (String value : values) {
-            			Logger.debug("value["+entry.getKey()+"] : " + value);
+            			Logger.debug("request parameter value["+entry.getKey()+"] : " + value);
             		}
             	}
             }
