@@ -26,10 +26,6 @@ public class LogMeAction extends Action<LogMe>
             		}
             	}
             }
-            
-            map.entrySet();
-            
-        	
         }
         
         return delegate.call(context);
