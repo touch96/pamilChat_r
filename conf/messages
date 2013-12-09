@@ -1,9 +1,17 @@
-pamil.apns.key.path=/usr/local/keys/pamilchatserverkey.p12
-pamil.apns.key.pw=1234
+pamil.apns.key.path.sandbox=/usr/local/keys/pamilchatserverkey.p12
+pamil.apns.key.pw.sandbox=1234
+pamil.apns.key.path.real=/usr/local/keys/pamilchatserverkey_real.p12
+pamil.apns.key.pw.real=1234
+
 pamil.apns.sec=PKCS12
-pamil.apns.gateway.host=gateway.sandbox.push.apple.com
+pamil.apns.gateway.host.sandbox=gateway.sandbox.push.apple.com
+pamil.apns.gateway.host.real=gateway.push.apple.com
+
 pamil.apns.gateway.port=2195
 
+pamil.apns.feedback.host.sandbox=feedback.sandbox.push.apple.com
+pamil.apns.feedback.host.real=feedback.push.apple.com
+pamil.apns.feedback.port=2196
 
 pamil.file.path=/usr/local/uploaded_images/
 pamil.file.url=/uploaded_images/

@@ -1,6 +1,12 @@
 package pc.wsapi.utils;
 
+import java.util.LinkedList;
+import java.util.ListIterator;
+
+import javapns.devices.Device;
 import javapns.devices.implementations.basic.BasicDevice;
+import javapns.feedback.AppleFeedbackServerBasicImpl;
+import javapns.feedback.FeedbackServiceManager;
 import javapns.notification.AppleNotificationServer;
 import javapns.notification.AppleNotificationServerBasicImpl;
 import javapns.notification.PushNotificationManager;
@@ -12,10 +18,10 @@ import play.i18n.Messages;
 
 public class PushUtil {
 	public static boolean push (String token , String msg) throws Exception {
-		String key = Messages.get("pamil.apns.key.path");
-		String pw = Messages.get("pamil.apns.key.pw");
+		String key = Messages.get("pamil.apns.key.path.real");
+		String pw = Messages.get("pamil.apns.key.pw.real");
 		String sec = Messages.get("pamil.apns.sec");
-		String gateway_host = Messages.get("pamil.apns.gateway.host");
+		String gateway_host = Messages.get("pamil.apns.gateway.host.real");
 		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
 		
 		if (Logger.isDebugEnabled()) {
@@ -57,6 +63,20 @@ public class PushUtil {
         }
         
         return true;
-
+	}
+	
+	public static ListIterator<Device> feedback (int count) throws Exception {
+		String key = Messages.get("pamil.apns.key.path.real");
+		String pw = Messages.get("pamil.apns.key.pw.real");
+		String sec = Messages.get("pamil.apns.sec");
+		String feedback_host = Messages.get("pamil.apns.feedback.host.real");
+		int feedback_port = Integer.parseInt(Messages.get("pamil.apns.feedback.port"));
+		
+		FeedbackServiceManager feedbackManager = new FeedbackServiceManager();
+		AppleFeedbackServerBasicImpl server = new AppleFeedbackServerBasicImpl(key, pw, sec,feedback_host,feedback_port);
+		
+		LinkedList<Device> devices = feedbackManager.getDevices(server);
+		
+		return devices.listIterator();
 	}
 }
