@@ -108,19 +108,25 @@ public class FriendMngBiz extends AbstractBiz {
 		String status = req_form.get("status")[0];
 		 
 		//update isnew
-		Friendrequest friendrequest = new Friendrequest();
-		friendrequest.f_code = f_code;
-		friendrequest.s_code = s_code;
-		friendrequest.status = status;
+		Query<Friendrequest> query = Friendrequest.find.where("f_code='"+f_code+"' and s_code='"+s_code+"' and status='00'");
 		
-		friendrequest.update();
-		
-		if ("00".equals(status)) {
-			add(req_form);
+		Friendrequest friendrequest = query.findUnique();
+		if (friendrequest != null) {
+			friendrequest.status = status;
+			
+			friendrequest.update();
+			
+			if ("00".equals(status)) {
+				add(req_form);
+			}
+			
+			params.put(msg, "OK!!");
+			result = JsonUtil.setRtn(ok, params);
+		} else {
+			params.put(msg, "no request");
+			result = JsonUtil.setRtn(ng, params);
+			
 		}
-		
-		params.put(msg, "OK!!");
-		result = JsonUtil.setRtn(ok, params);
 		
 		return result;
 		
