@@ -18,11 +18,19 @@ import play.i18n.Messages;
 
 public class PushUtil {
 	public static boolean push (String token , String msg) throws Exception {
-		String key = Messages.get("pamil.apns.key.path.real");
-		String pw = Messages.get("pamil.apns.key.pw.real");
+		//productバージョン(早くビルドを自動化させないと)
+//		String key = Messages.get("pamil.apns.key.path.real");
+//		String pw = Messages.get("pamil.apns.key.pw.real");
+//		String sec = Messages.get("pamil.apns.sec");
+//		String gateway_host = Messages.get("pamil.apns.gateway.host.real");
+//		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
+		
+		String key = Messages.get("pamil.apns.key.path.sandbox");
+		String pw = Messages.get("pamil.apns.key.pw.sandbox");
 		String sec = Messages.get("pamil.apns.sec");
-		String gateway_host = Messages.get("pamil.apns.gateway.host.real");
+		String gateway_host = Messages.get("pamil.apns.gateway.host.sandbox");
 		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
+
 		
 		if (Logger.isDebugEnabled()) {
 			Logger.debug ("key" + key);
