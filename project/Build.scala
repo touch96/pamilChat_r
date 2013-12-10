@@ -16,6 +16,7 @@ object ApplicationBuild extends Build {
     "mysql" % "mysql-connector-java" % "5.1.6"
     ,"bouncycastle" % "bcprov-jdk14" % "138"
     ,"log4j" % "log4j" % "1.2.17"
+    ,"com.notnoop.apns" % "apns" % "0.2.3"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(

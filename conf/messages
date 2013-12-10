@@ -1,7 +1,10 @@
 pamil.apns.key.path.sandbox=/usr/local/keys/pamilchatserverkey.p12
 pamil.apns.key.pw.sandbox=1234
+#pamil.apns.key.pw.sandbox=ta0601
+
 pamil.apns.key.path.real=/usr/local/keys/pamilchatserverkey_real.p12
-pamil.apns.key.pw.real=1234
+#pamil.apns.key.pw.real=1234
+pamil.apns.key.pw.real=ta0601
 
 pamil.apns.sec=PKCS12
 pamil.apns.gateway.host.sandbox=gateway.sandbox.push.apple.com

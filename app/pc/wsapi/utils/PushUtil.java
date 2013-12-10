@@ -17,7 +17,7 @@ import play.Logger;
 import play.i18n.Messages;
 
 public class PushUtil {
-	public static boolean push (String token , String msg) throws Exception {
+	public static boolean push (String token , String msg, int badge) throws Exception {
 		//productバージョン(早くビルドを自動化させないと)
 //		String key = Messages.get("pamil.apns.key.path.real");
 //		String pw = Messages.get("pamil.apns.key.pw.real");
@@ -43,7 +43,7 @@ public class PushUtil {
 		PushNotificationManager pushManager = new PushNotificationManager();
 		PushNotificationPayload payload = PushNotificationPayload.complex();
         payload.addAlert(msg);
-        payload.addBadge(1);
+        payload.addBadge(badge);
         payload.addSound("default");
         payload.addCustomDictionary("id", "1");
         
@@ -57,7 +57,7 @@ public class PushUtil {
         		new AppleNotificationServerBasicImpl(key, pw,sec,gateway_host,gateway_port);
         pushManager.initializeConnection(appleNoti);
         
-        //send push
+        //send push(プッシュの件数が多くなる場合を想定して、１コネクトあたり、複数のプッシュができるように改修が必要）
         PushedNotification pushed = pushManager.sendNotification(device, payload);
         
         
@@ -69,11 +69,22 @@ public class PushUtil {
 		} else {
 			String invalidToken = pushed.getDevice().getToken();
 			Logger.warn ("Push notification sent failed to : " + invalidToken);
-			/* Add code here to remove invalidToken from your database */  
+			/* Add code here to remove invalidToken from your database */
+			
+            /* Find out more about what the problem was */  
+            Exception theProblem = pushed.getException();
+            theProblem.printStackTrace();
+
+            /* If the problem was an error-response packet returned by Apple, get it */  
+            ResponsePacket theErrorResponse = pushed.getResponse();
+            if (theErrorResponse != null) {
+            	Logger.debug (theErrorResponse.getMessage());
+            }
 		}
         
-		for ( Device dev : feedback() ) {
-			Logger.debug("dev.getToken() : " + dev.getToken());
+		LinkedList<Device> devices = feedback();
+		for ( Device dev : devices) {
+			Logger.debug ("dev.getToken() : " + dev.getToken());
 			Logger.debug("dev.getDeviceId() : " + dev.getDeviceId());
 		}
         

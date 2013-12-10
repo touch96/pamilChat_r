@@ -36,6 +36,7 @@ public class FriendMngBiz extends AbstractBiz {
 		
 		String s_code =  req_form.get("s_code")[0];
 		String f_code =  req_form.get("f_code")[0];
+		int badge = 0;
 		
 		try {
 			friendRequest.s_code = s_code;
@@ -49,7 +50,14 @@ public class FriendMngBiz extends AbstractBiz {
 			Query<Users> query = Users.find.where("code='"+f_code+"'");
 			Users users = query.findUnique();
 			
-			PushUtil.push(users.token, "you have friend request from : " + s_code);
+			Query<Friendrequest> queryfr = Friendrequest.find.where("f_code='"+f_code+"'");
+			List<Friendrequest> friendrequest = queryfr.findList();
+			
+			if (friendrequest != null && friendrequest.size() > 0) {
+				badge = friendrequest.size() + 1;
+			}
+			
+			PushUtil.push(users.token, "you have friend request from : " + s_code,badge);
 			
 			params.put(msg, "request success");
 			result = JsonUtil.setRtn(ok, params);

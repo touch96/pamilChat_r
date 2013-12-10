@@ -63,6 +63,7 @@ public class MsgPushBiz extends AbstractBiz {
 		String[] receive_code = form.asFormUrlEncoded().get("receive_code");
 		String[] sec = form.asFormUrlEncoded().get("sec");
 		FilePart image = form.getFile("image");
+		int badge = 1;
 		
 		if (token == null) {
 			params.put(msg, "no token");
@@ -142,8 +143,15 @@ public class MsgPushBiz extends AbstractBiz {
 			msghistory.img = url;
 			msghistory.save();
 			
+			Query<Msghistory> queryfr = Msghistory.find.where("recieve_code='"+receive_code[0]+"' and isnew=true");
+			List<Msghistory> msgList = queryfr.findList();
+			
+			if (msgList != null && msgList.size() > 0) {
+				badge = msgList.size() + 1;
+			}
+			
 			//友達にプッシュ
-			PushUtil.push(token[0], "you have message");
+			PushUtil.push(token[0], "you have message from " + receive_code[0] , badge);
 			
 			//returnコード
 			params.put(msg, "ok");
