@@ -34,30 +34,47 @@ public class FriendMngBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		Friendrequest friendRequest = new Friendrequest();
 		
-		String s_code =  req_form.get("s_code")[0];
+		String code =  req_form.get("code")[0];
 		String f_code =  req_form.get("f_code")[0];
 		int badge = 0;
 		
 		try {
-			friendRequest.s_code = s_code;
-			friendRequest.f_code = f_code;
-			friendRequest.isnew = true;
-			friendRequest.status = "00";
+			Query<Friendrequest> query = Friendrequest.find.where("f_code = '"+f_code+"' and code = '"+code+"'");
 			
-			friendRequest.save();
+			Friendrequest temp_friendRequest = query.findUnique();
+			
+			if (temp_friendRequest != null) {
+				if ( temp_friendRequest.status == "00" ) {
+					params.put(ng, "already request");
+					result = JsonUtil.setRtn(ng, params);
+					return result;
+				} else {
+					temp_friendRequest.isnew = true;
+					temp_friendRequest.status = "00";
+					
+					temp_friendRequest.update();
+				}
+			} else {
+				friendRequest.code = code;
+				friendRequest.f_code = f_code;
+				friendRequest.isnew = true;
+				friendRequest.status = "00";
+				
+				friendRequest.save();
+			}
 			
 			//友達に知らせる
-			Query<Users> query = Users.find.where("code='"+f_code+"'");
-			Users users = query.findUnique();
+			Query<Users> queryUr = Users.find.where("code='"+f_code+"'");
+			Users users = queryUr.findUnique();
 			
-			Query<Friendrequest> queryfr = Friendrequest.find.where("f_code='"+f_code+"'");
-			List<Friendrequest> friendrequest = queryfr.findList();
+			query = Friendrequest.find.where("f_code='"+f_code+"'");
+			List<Friendrequest> friendrequest = query.findList();
 			
 			if (friendrequest != null && friendrequest.size() > 0) {
 				badge = friendrequest.size() + 1;
 			}
 			
-			PushUtil.push(users.token, "you have friend request from : " + s_code,badge);
+			PushUtil.push(users.token, "you have friend request from : " + code,badge);
 			
 			params.put(msg, "request success");
 			result = JsonUtil.setRtn(ok, params);
@@ -88,7 +105,7 @@ public class FriendMngBiz extends AbstractBiz {
 			//update isnew
 //			for (Friendrequest frq : list) {
 //				Friendrequest friendrequest = new Friendrequest();
-//				friendrequest.s_code = frq.s_code;
+//				friendrequest.code = frq.code;
 //				friendrequest.f_code = frq.f_code;
 //				friendrequest.isnew = false;
 //				
@@ -111,12 +128,12 @@ public class FriendMngBiz extends AbstractBiz {
 	public JsonNode friend_request_confirm (Map<String, String[]> req_form) {
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
-		String s_code = req_form.get("s_code")[0];
+		String code = req_form.get("code")[0];
 		String f_code = req_form.get("f_code")[0];
 		String status = req_form.get("status")[0];
 		 
 		//update isnew
-		Query<Friendrequest> query = Friendrequest.find.where("f_code='"+f_code+"' and s_code='"+s_code+"' and status='00'");
+		Query<Friendrequest> query = Friendrequest.find.where("f_code='"+f_code+"' and code='"+code+"' and status='00'");
 		
 		Friendrequest friendrequest = query.findUnique();
 		if (friendrequest != null) {
@@ -152,7 +169,7 @@ public class FriendMngBiz extends AbstractBiz {
 			
 			fr = new Friends();
 			fr.code = req_form.get("f_code")[0];
-			fr.f_code = req_form.get("s_code")[0];
+			fr.f_code = req_form.get("code")[0];
 			fr.save();
 			
 			return true;
@@ -236,7 +253,7 @@ public class FriendMngBiz extends AbstractBiz {
 	private boolean chkFriend (Friends friends, Map<String, String[]> req_form) {
 		
 		//追加対象のfriendが、既に登録されたかを確認
-		friends.code = req_form.get("s_code")[0];
+		friends.code = req_form.get("code")[0];
 		friends.f_code = req_form.get("f_code")[0];
 		return Friends.find.equals(friends);
 	}

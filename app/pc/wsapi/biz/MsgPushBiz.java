@@ -60,7 +60,7 @@ public class MsgPushBiz extends AbstractBiz {
 		
 		String[] token = form.asFormUrlEncoded().get("token");
 		String[] send_code = form.asFormUrlEncoded().get("send_code");
-		String[] receive_code = form.asFormUrlEncoded().get("receive_code");
+		String[] target = form.asFormUrlEncoded().get("target");
 		String[] sec = form.asFormUrlEncoded().get("sec");
 		FilePart image = form.getFile("image");
 		int badge = 1;
@@ -73,8 +73,8 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put(msg, "no send_code");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		if (receive_code == null) {
-			params.put(msg, "no receive_code");
+		if (target == null) {
+			params.put(msg, "no target");
 			result = JsonUtil.setRtn(ng, params);
 		}
 		if (sec == null) {
@@ -89,7 +89,7 @@ public class MsgPushBiz extends AbstractBiz {
 		
 		//user存在チェック
 		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-		Query<Users> query = finder.where("code='"+receive_code[0]+"'");
+		Query<Users> query = finder.where("code='"+target[0]+"'");
 		Users users = query.findUnique();
 		
 		if (users.token == null) {
@@ -106,12 +106,12 @@ public class MsgPushBiz extends AbstractBiz {
 		try {
 			//ファイル保存
 	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+send_code[0]+receive_code[0]+sdf1.format(new Date())+image.getFilename();
+	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+send_code[0]+target[0]+sdf1.format(new Date())+image.getFilename();
 //	        String contentType = image.getContentType();
 	        File file = image.getFile();
 	        
-	        String filePath = Messages.get("pamil.file.path")+send_code[0]+receive_code[0]+sdf1.format(new Date());
-	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+receive_code[0]+sdf1.format(new Date());
+	        String filePath = Messages.get("pamil.file.path")+send_code[0]+target[0]+sdf1.format(new Date());
+	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+target[0]+sdf1.format(new Date());
 	        
 	        Logger.debug("filePath : " + filePath);
 	        Logger.debug("fileUrl : " + fileUrl);
@@ -136,14 +136,14 @@ public class MsgPushBiz extends AbstractBiz {
 			
 			//dbへ内容格納
 			Msghistory msghistory = new Msghistory();
-			msghistory.recieve_code = receive_code[0];
+			msghistory.target = target[0];
 			msghistory.send_code = send_code[0];
-			msghistory.isnew = true;
+			msghistory.type = Msghistory.Constants.type_noread;
 			msghistory.sec = Integer.parseInt(sec[0]);
 			msghistory.img = url;
 			msghistory.save();
 			
-			Query<Msghistory> queryfr = Msghistory.find.where("recieve_code='"+receive_code[0]+"' and isnew=true");
+			Query<Msghistory> queryfr = Msghistory.find.where("target='"+target[0]+"'");
 			List<Msghistory> msgList = queryfr.findList();
 			
 			if (msgList != null && msgList.size() > 0) {
@@ -151,7 +151,7 @@ public class MsgPushBiz extends AbstractBiz {
 			}
 			
 			//友達にプッシュ
-			PushUtil.push(token[0], "you have message from " + receive_code[0] , badge);
+			PushUtil.push(token[0], "you have message from " + target[0] , badge);
 			
 			//returnコード
 			params.put(msg, "ok");
@@ -180,7 +180,7 @@ public class MsgPushBiz extends AbstractBiz {
 		String code = form.get("code")[0];
 		
 		//メッセージ取得
-		Query<Msghistory> query = Msghistory.find.where("recieve_code='"+code+"'");
+		Query<Msghistory> query = Msghistory.find.where(" (target='"+code+"' or send_code='"+code+"')");
 		List<Msghistory> msgList = query.findList();
 		
 		
@@ -191,7 +191,7 @@ public class MsgPushBiz extends AbstractBiz {
 			
 			//取得したメッセージを既読にする
 			for (Msghistory msghistory : msgList) {
-				msghistory.isnew = false;
+				msghistory.type = Msghistory.Constants.type_read;
 				msghistory.update();
 			}
 		} else {

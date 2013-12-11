@@ -12,9 +12,10 @@ import play.db.ebean.Model;
 
 @Entity
 public class Friendrequest extends Model {
+	
 	@NotNull
 	@Id
-	public String s_code;
+	public String code;
 	
 	@NotNull
 	public String f_code;
@@ -28,8 +29,8 @@ public class Friendrequest extends Model {
 	 */
 	public String status;
 
-	public String getS_code() {
-		return s_code;
+	public String getCode() {
+		return code;
 	}
 
 	public String getF_code() {

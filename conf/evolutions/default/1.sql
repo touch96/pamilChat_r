@@ -12,19 +12,23 @@ create table users (
     constraint pk_parent primary key (code,f_code));
     
  create table friendrequest (
- 	s_code                      varchar(100) not null,
+ 	code                      varchar(100) not null,
  	f_code                     varchar(100) not null,
  	isNew  boolean,
  	status                     varchar(2) not null,
  	createDt            date,
     constraint pk_parent primary key (s_code,f_code));
-
+ALTER TABLE friendrequest CHANGE COLUMN s_code code varchar(100) not null;
+    
  create table msghistory (
  	msghistoryseq INT NOT NULL AUTO_INCREMENT,
  	send_code                     varchar(100) not null,
- 	recieve_code                      varchar(100) not null,
+ 	target                      varchar(100) not null,
  	img                          varchar(1000) not null,
  	sec    INT,
- 	isNew  boolean,
+ 	type varchar(1) not null,
  	createDt            date,
     constraint pk_parent primary key (msghistoryseq));
+
+
+ALTER TABLE msghistory CHANGE COLUMN isNew type varchar(1) not null;

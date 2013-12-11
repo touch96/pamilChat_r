@@ -15,6 +15,12 @@ import play.db.ebean.Model;
 @Entity
 public class Msghistory extends Model {
 	
+	public static interface Constants {
+		public String type_noread = "0";
+		public String type_read = "1";
+		public String type_replyed = "2";
+	}
+	
 	@Id
 	@NotNull
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,25 +29,26 @@ public class Msghistory extends Model {
 	@NotNull
 	public String send_code;
 	@NotNull
-	public String recieve_code;
+	public String target;
 	@NotNull
 	public String img;
 	
-	public boolean isnew;
+	public String type;
 	
 	public int sec;
 	
 	public String getSend_code() {
 		return send_code;
 	}
-	public String getRecieve_code() {
-		return recieve_code;
+	public String getTarget() {
+		return target;
 	}
 	public String getImg() {
 		return img;
 	}
-	public boolean isnew() {
-		return isnew;
+	
+	public String getType() {
+		return type;
 	}
 	public int getSec() {
 		return sec;
