@@ -30,8 +30,8 @@ public class Friendrequest extends Model {
 	
 	public boolean isnew;
 	
-	@OneToMany(targetEntity=Friends.class, mappedBy="friendrequest")
-	public List<Friends> friends;
+//	@OneToMany(targetEntity=Friends.class, mappedBy="friendrequest")
+//	public List<Friends> friends;
 	
 	/**
 	 * 00 : 申請中
