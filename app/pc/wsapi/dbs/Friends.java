@@ -1,9 +1,15 @@
 package pc.wsapi.dbs;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.validation.NotNull;
@@ -20,7 +26,9 @@ public class Friends extends Model {
 	@NotNull
 	public String f_code;
 	
-	
+	@ManyToOne(optional=true)
+	@JoinColumn(name="code", referencedColumnName = "code")
+	public Friendrequest friendrequest;
 	
 	public String getCode() {
 		return code;

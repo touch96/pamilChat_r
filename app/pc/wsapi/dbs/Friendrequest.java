@@ -1,9 +1,17 @@
 package pc.wsapi.dbs;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.validation.NotNull;
@@ -21,6 +29,9 @@ public class Friendrequest extends Model {
 	public String f_code;
 	
 	public boolean isnew;
+	
+	@OneToMany(targetEntity=Friends.class, mappedBy="friendrequest")
+	public List<Friends> friends;
 	
 	/**
 	 * 00 : 申請中

@@ -13,6 +13,7 @@ import pc.wsapi.dbs.Friends;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;
@@ -40,11 +41,14 @@ public class FriendMngBiz extends AbstractBiz {
 		
 		try {
 			Query<Friendrequest> query = Friendrequest.find.where("f_code = '"+f_code+"' and code = '"+code+"'");
-			
-			Friendrequest temp_friendRequest = query.findUnique();
+			Friendrequest temp_friendRequest = 
+					Friendrequest.find.where().
+						eq("f_code", f_code).
+						eq("code", code).findUnique();
+//			Logger.debug("f_code : "+_temp_friendRequest.friends.f_code);
 			
 			if (temp_friendRequest != null) {
-				if ( temp_friendRequest.status == "00" ) {
+				if ( "00".equals(temp_friendRequest.status) ) {
 					params.put(ng, "already request");
 					result = JsonUtil.setRtn(ng, params);
 					return result;
@@ -186,8 +190,9 @@ public class FriendMngBiz extends AbstractBiz {
 	public JsonNode search (Map<String, String[]> req_form) {
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
+		String code = req_form.get("code")[0];
 		String f_code = req_form.get("f_code")[0];
-		Query<Users> query = Users.find.where("code like '"+f_code+"%'");
+		Query<Users> query = Users.find.where("code like '"+f_code+"%' and code not in (select f_code from friends where code = '"+code+"')");
 		List<Users> users = query.findList();
 		
 		if (users != null) {

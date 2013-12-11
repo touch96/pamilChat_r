@@ -18,12 +18,13 @@ public class Users extends Model {
 	@NotNull
 	public String password;
 	
-	
-	public String createdt;
+	@CreatedTimestamp
+	public Date createdt;
 	
 	@Id
 	@NotNull
 	public String token;
+	
 	
 	
 	public String getCode() {

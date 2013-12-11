@@ -1,7 +1,6 @@
 package pc.wsapi.utils;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import javapns.devices.Device;
 import javapns.devices.implementations.basic.BasicDevice;
@@ -25,6 +24,7 @@ public class PushUtil {
 //		String gateway_host = Messages.get("pamil.apns.gateway.host.real");
 //		int gateway_port = Integer.parseInt(Messages.get("pamil.apns.gateway.port"));
 		
+		//sandboxバージョン
 		String key = Messages.get("pamil.apns.key.path.sandbox");
 		String pw = Messages.get("pamil.apns.key.pw.sandbox");
 		String sec = Messages.get("pamil.apns.sec");
