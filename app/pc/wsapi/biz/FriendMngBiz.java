@@ -212,7 +212,7 @@ public class FriendMngBiz extends AbstractBiz {
 				.columnMapping("u.code", "code")
 				.create();
 		
-		Query<UsersSQL> aa = Ebean.find(UsersSQL.class); 
+		Query<UsersSQL> aa = Ebean.find(UsersSQL.class);
 		aa.setRawSql(rsql);
 		aa.setParameter(1, "%"+f_code+"%");
 		aa.setParameter(2, code);

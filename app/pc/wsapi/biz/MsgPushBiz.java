@@ -11,11 +11,17 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.codehaus.jackson.JsonNode;
+
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
 
 
 import pc.wsapi.dbs.Msghistory;
 import pc.wsapi.dbs.Users;
+import pc.wsapi.dbs.sqlbean.MsgHistorySQL;
+import pc.wsapi.dbs.sqlbean.UsersSQL;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
 import play.Logger;
@@ -180,8 +186,29 @@ public class MsgPushBiz extends AbstractBiz {
 		String code = form.get("code")[0];
 		
 		//メッセージ取得
-		Query<Msghistory> query = Msghistory.find.where(" (target='"+code+"' or send_code='"+code+"')");
-		List<Msghistory> msgList = query.findList();
+//		Query<Msghistory> query = Msghistory.find.where(" (target='"+code+"' or send_code='"+code+"')");
+		RawSql rsql = 
+				RawSqlBuilder.
+				unparsed(
+						"select m.msghistoryseq, m.send_code, m.target, m.img, m.sec, " +
+						"case when m.send_code = ? then '0' else m.type end type " +
+						"from msghistory m " +
+						"where " +
+						"m.target = ? or m.send_code = ? " )
+				.columnMapping("m.msghistoryseq", "msghistoryseq")
+				.columnMapping("m.send_code", "send_code")
+				.columnMapping("m.target", "target")
+				.columnMapping("m.img", "img")
+				.columnMapping("m.sec", "sec")
+				.columnMapping("m.type", "type")
+				.create();
+		Query<MsgHistorySQL> query = Ebean.find(MsgHistorySQL.class);
+		query.setRawSql(rsql);
+		query.setParameter(1, code);
+		query.setParameter(2, code);
+		query.setParameter(3, code);
+
+		List<MsgHistorySQL> msgList = query.findList();
 		
 		
 		if (msgList != null && msgList.size() > 0) {
@@ -189,9 +216,12 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put(messageList, msgList);
 			result = JsonUtil.setRtn(ok, params);
 			
-			//取得したメッセージを既読にする
-			for (Msghistory msghistory : msgList) {
-				msghistory.type = Msghistory.Constants.type_read;
+			Query<Msghistory> query2 = Msghistory.find.where(" target= ? ");
+			query2.setParameter(1, code);
+			
+			List<Msghistory> list = query2.findList();
+			for (Msghistory msghistory : list) {
+				msghistory.type = "1";
 				msghistory.update();
 			}
 		} else {
@@ -199,6 +229,39 @@ public class MsgPushBiz extends AbstractBiz {
 			result = JsonUtil.setRtn(ng, params);
 		}
 
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public JsonNode updateReadStatus (Map<String, String[]> form) {
+		Logger.debug ("MsgPushBiz - getNoreadMsgList");
+		JsonNode result = Json.newObject();
+		HashMap<String, Object> params = new HashMap<>();
+		String code = form.get("code")[0];
+		int msghistoryseq = Integer.parseInt(form.get("msghistoryseq")[0]);
+		
+		Query<Msghistory> query = Msghistory.find.where("msghistoryseq = ? and target = ?");
+		query.setParameter(1, msghistoryseq);
+		query.setParameter(2, code);
+		
+		Msghistory msghistory = query.findUnique();
+		if (msghistory != null && msghistory.type != null) {
+			msghistory.type = "2";
+			msghistory.update();
+			
+			params.put(msg, "image read");
+			result = JsonUtil.setRtn(ok, params);
+			
+		} else {
+			params.put(ng, "no read");
+			result = JsonUtil.setRtn(ng, params);
+			
+		}
+		
 		return result;
 	}
 	

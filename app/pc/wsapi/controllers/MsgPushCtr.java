@@ -42,6 +42,11 @@ public class MsgPushCtr extends AbstractController {
 		return ok(biz.getNoreadMsgList(getReq_params()));
 		
 	}
+	
+	public static Result updateReadStatus () {
+		MsgPushBiz biz = new MsgPushBiz();
+		return ok(biz.updateReadStatus(getReq_params()));
+	}
 
 
 }
