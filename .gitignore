@@ -27,3 +27,27 @@ dist
 .gitignore
 
 .gitignore
+
+.target/pc/wsapi/views/login.scala.html
+
+.target/pc/wsapi/views/msgPush.scala.html
+
+public/uploaded_images/testUser1testUser120131208/PDQvWBzAuOxnUvU_Okra.png
+
+*.png
+
+.target/pc/wsapi/views/upload.scala.html
+
+.target/pc/wsapi/views/login.scala.html
+
+.target/pc/wsapi/views/login.scala.html
+
+.target/pc/wsapi/views/msgPush.scala.html
+
+.target/pc/wsapi/views/signIn.scala.html
+
+.target/pc/wsapi/views/signIn.scala.html
+
+.target/pc/wsapi/views/friendMng.scala.html
+
+conf/META-INF/persistence.xml
