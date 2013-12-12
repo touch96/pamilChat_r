@@ -22,7 +22,8 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
     // Add your own project settings here
-    resolvers += "maven kungfuters" at "http://maven.kungfuters.org/content/groups/public"    
+    resolvers += "maven kungfuters" at "http://maven.kungfuters.org/content/groups/public",
+    javaOptions ++= Seq("-Xmx1024M", "-Xmx2048M", "-XX:MaxPermSize=2048M")
   )
 
 }
