@@ -3,11 +3,11 @@ package pc.wsapi.controllers;
 import java.util.Map;
 
 import play.Logger;
-import play.mvc.Controller;
+import pc.common.controllers.AbstractController;
 import pc.wsapi.biz.SignInBiz;
 import play.mvc.Result;
 
-public class SignInCtr extends Controller{
+public class SignInCtr extends AbstractController{
 
 	public static Result _index() {
 		
@@ -18,7 +18,7 @@ public class SignInCtr extends Controller{
 		SignInBiz biz = new SignInBiz();
 		Map<String, String[]> form = request().body().asFormUrlEncoded();
 		Logger.debug("form : " + form);
-		return ok(biz.execute(form));
+		return ok_res(biz.execute(form));
 	}
 	
 	

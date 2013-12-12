@@ -16,7 +16,7 @@ public class LoginCtr extends AbstractController {
 		LoginBiz biz = new LoginBiz();
 		Map<String, String[]> form = request().body().asFormUrlEncoded();
 		Logger.debug("form : " + form);
-		return ok(biz.execute(form));
+		return ok_res(biz.execute(form));
 	}
 
 	
@@ -37,6 +37,6 @@ public class LoginCtr extends AbstractController {
 
 
 	public static Result _index() {
-		return ok(pc.wsapi.views.html.login.render());
+		return ok_res(pc.wsapi.views.html.login.render());
 	}
 }

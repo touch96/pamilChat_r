@@ -17,6 +17,7 @@ object ApplicationBuild extends Build {
     ,"bouncycastle" % "bcprov-jdk14" % "138"
     ,"log4j" % "log4j" % "1.2.17"
     ,"com.notnoop.apns" % "apns" % "0.2.3"
+    ,"org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(

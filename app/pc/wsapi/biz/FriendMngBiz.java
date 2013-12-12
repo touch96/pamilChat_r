@@ -6,11 +6,16 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
+import com.avaje.ebean.SqlRow;
 
 import pc.wsapi.dbs.Friendrequest;
 import pc.wsapi.dbs.Friends;
 import pc.wsapi.dbs.Users;
+import pc.wsapi.dbs.sqlbean.UsersSQL;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
 import play.Logger;
@@ -192,10 +197,28 @@ public class FriendMngBiz extends AbstractBiz {
 		HashMap<String, Object> params = new HashMap<>();
 		String code = req_form.get("code")[0];
 		String f_code = req_form.get("f_code")[0];
-		Query<Users> query = Users.find.where("code like '"+f_code+"%' and code not in (select f_code from friends where code = '"+code+"')");
-		List<Users> users = query.findList();
 		
-		if (users != null) {
+//		Query<Users> query = Users.find.where("code like '"+f_code+"%' and code not in (select f_code from friends where code = '"+code+"')");
+//		List<Users> users = query.findList();
+//		
+		RawSql rsql = 
+				RawSqlBuilder.
+				unparsed(
+						"select u.code " +
+						"from users u " +
+						"where " +
+						"u.code like ? and " +
+						"u.code not in (select f_code from friends where code = ?)")
+				.columnMapping("u.code", "code")
+				.create();
+		
+		Query<UsersSQL> aa = Ebean.find(UsersSQL.class); 
+		aa.setRawSql(rsql);
+		aa.setParameter(1, "%"+f_code+"%");
+		aa.setParameter(2, code);
+		
+		List<UsersSQL> users = aa.findList();
+		if (users != null && users.size() > 0) {
 			params.put(msg, "user is exists");
 			params.put("users", users);
 			result = JsonUtil.setRtn(ok, params);

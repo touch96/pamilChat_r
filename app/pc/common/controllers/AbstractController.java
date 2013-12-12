@@ -7,12 +7,13 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import pc.core.LogMe;
 import play.Logger;
+import play.api.templates.Html;
 import play.libs.Json;
 import play.libs.F.Callback;
 import play.mvc.Controller;
-import play.mvc.Http.Context;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.WebSocket;
+import play.mvc.Result;
 
 @LogMe
 public abstract class AbstractController extends Controller {
@@ -57,6 +58,24 @@ public abstract class AbstractController extends Controller {
 		Logger.debug("path : " + request().path());
 		
 		return request().host();
+	}
+	
+	protected static Result ok_res (JsonNode jn) {
+		
+		Logger.debug("remoteAddress[" + request().remoteAddress() + "] :  " + jn.toString());
+  
+		return ok(jn);
+	}
+	
+	protected static Result ok_res (Html html) {
+		
+		Logger.debug(html.contentType());
+  
+		return ok(html);
+	}
+	
+	protected static Result error_res (JsonNode jn) {
+		return ok(jn);
 	}
 
 }

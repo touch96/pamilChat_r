@@ -2,11 +2,24 @@ package pc.wsapi.biz;
 
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.codehaus.jackson.JsonNode;
 
 public abstract class AbstractBiz {
+	protected EntityManagerFactory emf;
+	
+	public EntityManager getEm () {
+		emf = Persistence.createEntityManagerFactory("defaultPersistenceUnit");
+		return emf.createEntityManager();
+	}
+	
 	public abstract void execute (play.mvc.WebSocket.In<JsonNode> in, play.mvc.WebSocket.Out<JsonNode> out);
 	public abstract JsonNode execute (Map<String, String[]> req_form);
+	
+	
 	
 	protected static final String rtn = "rtn";
 	
