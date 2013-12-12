@@ -216,7 +216,7 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put(messageList, msgList);
 			result = JsonUtil.setRtn(ok, params);
 			
-			Query<Msghistory> query2 = Msghistory.find.where(" target= ? ");
+			Query<Msghistory> query2 = Msghistory.find.where(" target= ? and type='0' ");
 			query2.setParameter(1, code);
 			
 			List<Msghistory> list = query2.findList();
