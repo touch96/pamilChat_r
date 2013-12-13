@@ -159,12 +159,13 @@ public class MsgPushBiz extends AbstractBiz {
 			Msghistory msghistory = new Msghistory();
 			msghistory.target = target[0];
 			msghistory.send_code = send_code[0];
-			msghistory.type = Msghistory.Constants.type_noread;
+			msghistory.type = "0";
 			msghistory.sec = Integer.parseInt(sec[0]);
 			msghistory.img = url;
 			msghistory.save();
 			
-			Query<Msghistory> queryfr = Msghistory.find.where("target='"+target[0]+"'");
+			Query<Msghistory> queryfr = Msghistory.find.where("target= ? and type= '0'");
+			queryfr.setParameter(1, target[0]);
 			List<Msghistory> msgList = queryfr.findList();
 			
 			if (msgList != null && msgList.size() > 0) {
