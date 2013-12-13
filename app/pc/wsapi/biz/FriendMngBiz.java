@@ -10,15 +10,12 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
-import com.avaje.ebean.SqlRow;
-
 import pc.wsapi.dbs.Friendrequest;
 import pc.wsapi.dbs.Friends;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.dbs.sqlbean.UsersSQL;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
-import play.Logger;
 import play.libs.Json;
 import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;

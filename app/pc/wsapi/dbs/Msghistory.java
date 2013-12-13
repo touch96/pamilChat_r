@@ -15,11 +15,11 @@ import play.db.ebean.Model;
 @Entity
 public class Msghistory extends Model {
 	
-	public static interface Constants {
-		public String type_noread = "0";
-		public String type_read = "1";
-		public String type_replyed = "2";
-	}
+//	public static interface Constants {
+//		public String type_noread = "0";
+//		public String type_read = "1";
+//		public String type_replyed = "2";
+//	}
 	
 	@Id
 	@NotNull

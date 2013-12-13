@@ -243,7 +243,7 @@ public class MsgPushBiz extends AbstractBiz {
 			}
 		} else {
 			params.put(msg, "no message");
-			result = JsonUtil.setRtn(ng, params);
+			result = JsonUtil.setRtn(ok, params);
 		}
 
 		return result;
