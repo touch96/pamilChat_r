@@ -82,17 +82,14 @@ public class MsgPushBiz extends AbstractBiz {
 			return result;
 		}
 		
-		String[] token = form.asFormUrlEncoded().get("token");
+//		String[] token = form.asFormUrlEncoded().get("token");
+		String token = "";
 		String[] send_code = form.asFormUrlEncoded().get("send_code");
 		String[] target = form.asFormUrlEncoded().get("target");
 		String[] sec = form.asFormUrlEncoded().get("sec");
 		FilePart image = form.getFile("image");
 		int badge = 1;
 		
-		if (token == null) {
-			params.put(msg, "no token");
-			result = JsonUtil.setRtn(ng, params);
-		}
 		if (send_code == null) {
 			params.put(msg, "no send_code");
 			result = JsonUtil.setRtn(ng, params);
@@ -119,13 +116,13 @@ public class MsgPushBiz extends AbstractBiz {
 		if (users.token == null) {
 			params.put(msg, "no recieve user");
 			result = JsonUtil.setRtn(ng, params);
-			
 		}
-		
 		
 		if (result.size() > 0) {
 			return result;
 		}
+		
+		token = users.token;
 		
 		try {
 			//ファイル保存
@@ -175,7 +172,7 @@ public class MsgPushBiz extends AbstractBiz {
 			}
 			
 			//友達にプッシュ
-			PushUtil.push(token[0], "you have message from " + target[0] , badge);
+			PushUtil.push(token, "you have message from " + send_code[0] , badge);
 			
 			//returnコード
 			params.put(msg, "ok");
