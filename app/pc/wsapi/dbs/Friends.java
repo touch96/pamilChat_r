@@ -1,6 +1,6 @@
 package pc.wsapi.dbs;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,12 +32,12 @@ public class Friends extends Model {
 		return f_code;
 	}
 
-	public Date getCreatedt() {
+	public Timestamp getCreatedt() {
 		return createdt;
 	}
 
 	@CreatedTimestamp
-	public Date createdt;
+	public Timestamp createdt;
 	
 	public static Finder<Long,Friends> find = new Finder<Long,Friends>(
 		    Long.class, Friends.class

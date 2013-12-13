@@ -1,6 +1,6 @@
 package pc.wsapi.dbs;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,10 +21,10 @@ public class Parent extends Model {
     public String name;
  
     @CreatedTimestamp
-    public Date createDate;
+    public Timestamp createDate;
  
     @Version
-    public Date updateDate;
+    public Timestamp updateDate;
  
     public String toString() {
         return "Parent [id=" + id + ", name=" + name + ", createDate="

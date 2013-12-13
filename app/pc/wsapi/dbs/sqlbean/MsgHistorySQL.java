@@ -1,5 +1,7 @@
 package pc.wsapi.dbs.sqlbean;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 
 import com.avaje.ebean.annotation.Sql;
@@ -14,7 +16,16 @@ public class MsgHistorySQL {
 	public String img;
 	public String type;
 	public String sec;
+	public Timestamp createdt;
 	
+	
+	
+	public Timestamp getCreatedt() {
+		return createdt;
+	}
+	public void setCreatedt(Timestamp createdt) {
+		this.createdt = createdt;
+	}
 	public String getMsghistoryseq() {
 		return msghistoryseq;
 	}

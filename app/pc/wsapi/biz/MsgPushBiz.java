@@ -209,7 +209,7 @@ public class MsgPushBiz extends AbstractBiz {
 				RawSqlBuilder.
 				unparsed(
 						"select m.msghistoryseq, m.send_code, m.target, m.img, m.sec, " +
-						"case when m.send_code = ? then '0' else m.type end type " +
+						"case when m.send_code = ? then '0' else m.type end type , m.createdt " +
 						"from msghistory m " +
 						"where " +
 						"m.target = ? or m.send_code = ? " )
@@ -219,6 +219,7 @@ public class MsgPushBiz extends AbstractBiz {
 				.columnMapping("m.img", "img")
 				.columnMapping("m.sec", "sec")
 				.columnMapping("m.type", "type")
+				.columnMapping("m.createdt", "createdt")
 				.create();
 		Query<MsgHistorySQL> query = Ebean.find(MsgHistorySQL.class);
 		query.setRawSql(rsql);

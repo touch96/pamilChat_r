@@ -1,15 +1,9 @@
 package pc.wsapi.dbs;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
-import org.hibernate.validator.internal.engine.resolver.JPATraversableResolver;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.validation.NotNull;
@@ -25,7 +19,7 @@ public class Users extends Model {
 	public String password;
 	
 	@CreatedTimestamp
-	public Date createdt;
+	public Timestamp createdt;
 	
 	@Id
 	@NotNull
@@ -41,8 +35,8 @@ public class Users extends Model {
 		return password;
 	}
 	
-	public String getCreatedt() {
-		return (new Date()).toString();
+	public Timestamp getCreatedt() {
+		return createdt;
 	}
 	
 	
