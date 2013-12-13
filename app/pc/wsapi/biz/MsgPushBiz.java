@@ -21,7 +21,6 @@ import com.avaje.ebean.RawSqlBuilder;
 import pc.wsapi.dbs.Msghistory;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.dbs.sqlbean.MsgHistorySQL;
-import pc.wsapi.dbs.sqlbean.UsersSQL;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
 import play.Logger;
@@ -48,12 +47,31 @@ public class MsgPushBiz extends AbstractBiz {
 		return null;
 	}
 	
+	public JsonNode testPush (Map<String, String[]> form) throws Exception {
+		Logger.debug ("MsgPushBiz - testPush");
+		JsonNode result = Json.newObject();
+		HashMap<String, Object> params = new HashMap<>();
+		
+		String token = form.get("token")[0];
+		String send_code = form.get("send_code")[0];
+		String target = form.get("target")[0];
+		String message = form.get("message")[0];
+		
+		
+		//友達にプッシュ
+		PushUtil.push(token, send_code + "さんから"+target+"さんへのメッセージ： " + message , 1);
+		
+		//returnコード
+		params.put(msg, "ok");
+		result = JsonUtil.setRtn(ok, params);
+		return result;
+	}
 	/**
 	 * 
 	 * @param form
 	 * @return
 	 */
-	public  JsonNode sendMessage (String url , MultipartFormData form) {
+	public JsonNode sendMessage (String url , MultipartFormData form) {
 		Logger.debug ("MsgPushBiz - sendMessage");
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();

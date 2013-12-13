@@ -47,6 +47,11 @@ public class MsgPushCtr extends AbstractController {
 		MsgPushBiz biz = new MsgPushBiz();
 		return ok(biz.updateReadStatus(getReq_params()));
 	}
-
+	
+	
+	public static Result testPush () throws Exception {
+		MsgPushBiz biz = new MsgPushBiz();
+		return ok(biz.testPush(getReq_params()));
+	}
 
 }

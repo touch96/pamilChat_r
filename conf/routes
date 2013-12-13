@@ -19,6 +19,7 @@ POST   /sendMsg                      pc.wsapi.controllers.MsgPushCtr.sendMessage
 POST   /getNoreadMsgList             pc.wsapi.controllers.MsgPushCtr.getNoreadMsgList()
 POST   /getMsg                       pc.wsapi.controllers.MsgPushCtr.getMessage()
 POST   /updateReadStatus             pc.wsapi.controllers.MsgPushCtr.updateReadStatus()
+POST   /testPush                     pc.wsapi.controllers.MsgPushCtr.testPush()
 
 #################### friends manage
 GET    /friendsIndex                pc.wsapi.controllers.FriendMngCtr._index()
