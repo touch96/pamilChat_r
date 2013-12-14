@@ -2,6 +2,7 @@ package pc.wsapi.biz;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 
+import pc.wsapi.beans.PushBean;
 import pc.wsapi.dbs.Msghistory;
 import pc.wsapi.dbs.Users;
 import pc.wsapi.dbs.sqlbean.MsgHistorySQL;
@@ -85,7 +87,7 @@ public class MsgPushBiz extends AbstractBiz {
 //		String[] token = form.asFormUrlEncoded().get("token");
 		String token = "";
 		String[] send_code = form.asFormUrlEncoded().get("send_code");
-		String[] target = form.asFormUrlEncoded().get("target");
+		String[] targets = form.asFormUrlEncoded().get("target");
 		String[] sec = form.asFormUrlEncoded().get("sec");
 		FilePart image = form.getFile("image");
 		int badge = 1;
@@ -94,7 +96,7 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put(msg, "no send_code");
 			result = JsonUtil.setRtn(ng, params);
 		}
-		if (target == null) {
+		if (targets == null) {
 			params.put(msg, "no target");
 			result = JsonUtil.setRtn(ng, params);
 		}
@@ -108,83 +110,101 @@ public class MsgPushBiz extends AbstractBiz {
 			result = JsonUtil.setRtn(ng, params);
 		}
 		
-		//user存在チェック
-		Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
-		Query<Users> query = finder.where("code='"+target[0]+"'");
-		Users users = query.findUnique();
-		
-		if (users.token == null) {
-			params.put(msg, "no recieve user");
-			result = JsonUtil.setRtn(ng, params);
-		}
-		
-		if (result.size() > 0) {
-			return result;
-		}
-		
-		token = users.token;
-		
-		try {
-			//ファイル保存
-	        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-	        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+send_code[0]+target[0]+sdf1.format(new Date())+image.getFilename();
-//	        String contentType = image.getContentType();
-	        File file = image.getFile();
-	        
-	        String filePath = Messages.get("pamil.file.path")+send_code[0]+target[0]+sdf1.format(new Date());
-	        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+target[0]+sdf1.format(new Date());
-	        
-	        Logger.debug("filePath : " + filePath);
-	        Logger.debug("fileUrl : " + fileUrl);
-	        Logger.debug("fileName : " + fileName);
-	        
-	        File dir = new File(filePath);
-	        
-	        if (!dir.exists()) {
-	        	if (!dir.mkdir()) {
-	        		Logger.debug("faild make dir");
-	        	}
-	        }
-	        
-        	if (file.renameTo(new File(filePath+"/"+fileName))) {
-        		Logger.debug("success file make : " + (filePath+"/"+fileName));
-        		url = "http://"+url + fileUrl + "/" + fileName;
-        		Logger.debug("url : " + url);
-        	} else {
-        		//ファイル保存が失敗した場合の実装（エラー画像を表示）
-        		Logger.debug("フィアル作成失敗");
+		//ファイル保存
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+        String fileName = RandomStringUtils.randomAlphabetic(15)+"_"+send_code[0]+sdf1.format(new Date())+image.getFilename();
+//        String contentType = image.getContentType();
+        File file = image.getFile();
+        
+        String filePath = Messages.get("pamil.file.path")+send_code[0]+sdf1.format(new Date());
+        String fileUrl = Messages.get("pamil.file.url")+send_code[0]+sdf1.format(new Date());
+        
+        Logger.debug("filePath : " + filePath);
+        Logger.debug("fileUrl : " + fileUrl);
+        Logger.debug("fileName : " + fileName);
+        
+        File dir = new File(filePath);
+        
+        if (!dir.exists()) {
+        	if (!dir.mkdir()) {
+        		Logger.debug("faild make dir");
         	}
+        }
+        
+    	if (file.renameTo(new File(filePath+"/"+fileName))) {
+    		Logger.debug("success file make : " + (filePath+"/"+fileName));
+    		url = "http://"+url + fileUrl + "/" + fileName;
+    		Logger.debug("url : " + url);
+    	} else {
+    		//ファイル保存が失敗した場合の実装（エラー画像を表示）
+    		Logger.debug("フィアル作成失敗");
+    	}
+    	
+    	ArrayList<PushBean> pushList = new ArrayList<PushBean>();
+		for (String target : targets) {
+			PushBean pushBean = new PushBean();
+			//user存在チェック
+			Finder<Long, Users> finder = new Finder<Long, Users>(Long.class, Users.class);
+			Query<Users> query = finder.where("code='"+target+"'");
+			Users users = query.findUnique();
 			
-			//dbへ内容格納
-			Msghistory msghistory = new Msghistory();
-			msghistory.target = target[0];
-			msghistory.send_code = send_code[0];
-			msghistory.type = "0";
-			msghistory.sec = Integer.parseInt(sec[0]);
-			msghistory.img = url;
-			msghistory.save();
-			
-			Query<Msghistory> queryfr = Msghistory.find.where("target= ? and type= '0'");
-			queryfr.setParameter(1, target[0]);
-			List<Msghistory> msgList = queryfr.findList();
-			
-			if (msgList != null && msgList.size() > 0) {
-				badge = msgList.size() + 1;
+			if (users.token == null) {
+				params.put(msg, "no recieve user");
+				result = JsonUtil.setRtn(ng, params);
 			}
 			
-			//友達にプッシュ
-			PushUtil.push(token, "you have message from " + send_code[0] , badge);
+			if (result.size() > 0) {
+				return result;
+			}
 			
+			token = users.token;
+			try {
+				
+				//dbへ内容格納
+				Msghistory msghistory = new Msghistory();
+				msghistory.target = target;
+				msghistory.send_code = send_code[0];
+				msghistory.type = "0";
+				msghistory.sec = Integer.parseInt(sec[0]);
+				msghistory.img = url;
+				msghistory.save();
+				
+				Query<Msghistory> queryfr = Msghistory.find.where("target= ? and type= '0'");
+				queryfr.setParameter(1, target);
+				List<Msghistory> msgList = queryfr.findList();
+				
+				if (msgList != null && msgList.size() > 0) {
+					badge = msgList.size() + 1;
+				}
+				
+				pushBean.setBadge(badge);
+				pushBean.setMsg("you have message from " + send_code[0]);
+				pushBean.setToken(token);
+				
+				pushList.add(pushBean);
+			} catch (Exception e) {
+				e.printStackTrace();
+				params.put(msg, e.fillInStackTrace());
+				result = JsonUtil.setRtn(error, params);
+				
+			}
+
+		}
+		
+		try {
+			//友達にプッシュ
+			PushUtil.pushs(pushList);
 			//returnコード
 			params.put(msg, "ok");
 			result = JsonUtil.setRtn(ok, params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			params.put(msg, e.fillInStackTrace());
 			result = JsonUtil.setRtn(error, params);
 			
 		}
+		
+
 		
 		return result;
 	}
@@ -210,7 +230,7 @@ public class MsgPushBiz extends AbstractBiz {
 						"case when m.send_code = ? then '0' else m.type end type , m.createdt " +
 						"from msghistory m " +
 						"where " +
-						"m.target = ? or m.send_code = ? " )
+						"m.target = ? or m.send_code = ? order by m.createdt desc " )
 				.columnMapping("m.msghistoryseq", "msghistoryseq")
 				.columnMapping("m.send_code", "send_code")
 				.columnMapping("m.target", "target")
