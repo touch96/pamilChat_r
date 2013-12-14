@@ -10,12 +10,15 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
+
 import pc.wsapi.dbs.Friendrequest;
 import pc.wsapi.dbs.Friends;
 import pc.wsapi.dbs.Users;
+import pc.wsapi.dbs.sqlbean.FriendsSQL;
 import pc.wsapi.dbs.sqlbean.UsersSQL;
 import pc.wsapi.utils.JsonUtil;
 import pc.wsapi.utils.PushUtil;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;
@@ -236,8 +239,19 @@ public class FriendMngBiz extends AbstractBiz {
 		JsonNode result = Json.newObject();
 		HashMap<String, Object> params = new HashMap<>();
 		String code = req_form.get("code")[0];
-		Query<Friends> query = Friends.find.where("code = '"+code+"'");
-		List<Friends> frList = query.findList();
+		
+		RawSql rsql = 
+				RawSqlBuilder.
+				unparsed("select code, f_code, createdt from friends where code = ?")
+				.columnMapping("code", "code")
+				.columnMapping("f_code", "f_code")
+				.columnMapping("createdt", "createdt").create();
+		
+		Query<FriendsSQL> query = Ebean.find(FriendsSQL.class);
+		query.setRawSql(rsql);
+		query.setParameter(1, code);
+		
+		List<FriendsSQL> frList = query.findList();
 		
 		if (frList != null && frList.size() > 0) {
 			params.put(msg, "have friends");
