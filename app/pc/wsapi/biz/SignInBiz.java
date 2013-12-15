@@ -47,13 +47,13 @@ public class SignInBiz extends AbstractBiz {
 		
 		String code = form.get("code")[0];
 		String password = form.get("password")[0];
-		String token = form.get("token")[0];
+//		String token = form.get("token")[0];
 		
 		//save
 		Users users = new Users();
 		users.code  = code;
-		users.password = password;
-		users.token = token;
+//		users.password = password;
+//		users.token = token;
 		
 		boolean isExistsUser = Users.find.equals(users);
 		if (!isExistsUser) {

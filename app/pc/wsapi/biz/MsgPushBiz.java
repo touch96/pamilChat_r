@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javapns.communication.ConnectionToAppleServer;
+import javapns.devices.Devices;
+import javapns.notification.AppleNotificationServer;
+import javapns.notification.AppleNotificationServerBasicImpl;
+import javapns.notification.PushNotificationManager;
+import javapns.notification.PushNotificationPayload;
+import javapns.notification.PushedNotification;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -164,7 +172,7 @@ public class MsgPushBiz extends AbstractBiz {
 				Msghistory msghistory = new Msghistory();
 				msghistory.target = target;
 				msghistory.send_code = send_code[0];
-				msghistory.type = "0";
+				msghistory.type = "1";
 				msghistory.sec = Integer.parseInt(sec[0]);
 				msghistory.img = url;
 				msghistory.save();
@@ -226,7 +234,7 @@ public class MsgPushBiz extends AbstractBiz {
 		RawSql rsql = 
 				RawSqlBuilder.
 				unparsed(
-						"select m.msghistoryseq, m.send_code, m.target, m.img, m.sec, " +
+						"select m.msghistoryseq, '' send_code, m.target, m.img, m.sec, " +
 						"case when m.send_code = ? then '0' else m.type end type , m.createdt " +
 						"from msghistory m " +
 						"where " +
@@ -253,14 +261,14 @@ public class MsgPushBiz extends AbstractBiz {
 			params.put(messageList, msgList);
 			result = JsonUtil.setRtn(ok, params);
 			
-			Query<Msghistory> query2 = Msghistory.find.where(" target= ? and type='0' ");
-			query2.setParameter(1, code);
-			
-			List<Msghistory> list = query2.findList();
-			for (Msghistory msghistory : list) {
-				msghistory.type = "1";
-				msghistory.update();
-			}
+//			Query<Msghistory> query2 = Msghistory.find.where(" target= ? and type='0' ");
+//			query2.setParameter(1, code);
+//			
+//			List<Msghistory> list = query2.findList();
+//			for (Msghistory msghistory : list) {
+//				msghistory.type = "1";
+//				msghistory.update();
+//			}
 		} else {
 			params.put(msg, "no message");
 			result = JsonUtil.setRtn(ok, params);
